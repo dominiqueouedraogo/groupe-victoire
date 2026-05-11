@@ -3,20 +3,30 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Groupe Victoire ENA Prep Platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: resources
+    description: Educational resources
+  - name: news
+    description: News and announcements
+  - name: stats
+    description: Platform statistics
+  - name: payments
+    description: Payment management
+  - name: users
+    description: User management
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +34,275 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /resources:
+    get:
+      operationId: listResources
+      tags: [resources]
+      summary: List resources
+      parameters:
+        - name: subject_id
+          in: query
+          schema: { type: ["string", "null"] }
+        - name: content_type
+          in: query
+          schema: { type: ["string", "null"] }
+        - name: search
+          in: query
+          schema: { type: ["string", "null"] }
+        - name: is_free
+          in: query
+          schema: { type: ["boolean", "null"] }
+      responses:
+        "200":
+          description: List of resources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Resource"
+    post:
+      operationId: createResource
+      tags: [resources]
+      summary: Create a resource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResourceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+
+  /resources/{id}:
+    get:
+      operationId: getResource
+      tags: [resources]
+      summary: Get a resource by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Resource
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+    delete:
+      operationId: deleteResource
+      tags: [resources]
+      summary: Delete a resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "204":
+          description: Deleted
+
+  /news:
+    get:
+      operationId: listNews
+      tags: [news]
+      summary: List news articles
+      responses:
+        "200":
+          description: News list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsArticle"
+    post:
+      operationId: createNews
+      tags: [news]
+      summary: Create a news article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsArticle"
+
+  /stats:
+    get:
+      operationId: getPlatformStats
+      tags: [stats]
+      summary: Get platform statistics
+      responses:
+        "200":
+          description: Platform stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlatformStats"
+
+  /payments:
+    get:
+      operationId: listPayments
+      tags: [payments]
+      summary: List all payments (admin)
+      responses:
+        "200":
+          description: Payments list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Payment"
+    post:
+      operationId: submitPayment
+      tags: [payments]
+      summary: Submit a payment request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+
+  /payments/{id}/approve:
+    patch:
+      operationId: approvePayment
+      tags: [payments]
+      summary: Approve a payment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Updated payment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+
+  /payments/{id}/reject:
+    patch:
+      operationId: rejectPayment
+      tags: [payments]
+      summary: Reject a payment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Updated payment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      summary: List all users (admin)
+      parameters:
+        - name: search
+          in: query
+          schema: { type: ["string", "null"] }
+        - name: role
+          in: query
+          schema: { type: ["string", "null"] }
+      responses:
+        "200":
+          description: Users list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserProfile"
+
+  /users/{id}/toggle-premium:
+    patch:
+      operationId: toggleUserPremium
+      tags: [users]
+      summary: Toggle premium status for a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PremiumToggle"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /subjects:
+    get:
+      operationId: listSubjects
+      tags: [resources]
+      summary: List subjects (optionally filtered by cycle)
+      parameters:
+        - name: cycle_id
+          in: query
+          schema: { type: ["string", "null"] }
+      responses:
+        "200":
+          description: Subjects list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Subject"
+
+  /cycles:
+    get:
+      operationId: listCycles
+      tags: [resources]
+      summary: List all cycles
+      responses:
+        "200":
+          description: Cycles list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cycle"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +313,121 @@ components:
       required:
         - status
 
+    Resource:
+      type: object
+      required: [id, title, content_type, is_free, created_at]
+      properties:
+        id:          { type: string }
+        title:       { type: string }
+        description: { type: ["string", "null"] }
+        content_type: { type: string }
+        file_url:    { type: ["string", "null"] }
+        thumbnail_url: { type: ["string", "null"] }
+        is_free:     { type: boolean }
+        subject_id:  { type: ["string", "null"] }
+        author_id:   { type: ["string", "null"] }
+        created_at:  { type: string }
+
+    ResourceInput:
+      type: object
+      required: [title, content_type, is_free]
+      properties:
+        title:       { type: string }
+        description: { type: string }
+        content_type: { type: string }
+        file_url:    { type: string }
+        thumbnail_url: { type: string }
+        is_free:     { type: boolean }
+        subject_id:  { type: string }
+
+    NewsArticle:
+      type: object
+      required: [id, title, content, created_at]
+      properties:
+        id:        { type: string }
+        title:     { type: string }
+        content:   { type: string }
+        author_id: { type: ["string", "null"] }
+        created_at: { type: string }
+
+    NewsInput:
+      type: object
+      required: [title, content]
+      properties:
+        title:   { type: string }
+        content: { type: string }
+
+    PlatformStats:
+      type: object
+      required: [total_users, premium_users, total_resources, total_candidates, total_instructors, pending_payments]
+      properties:
+        total_users:       { type: integer }
+        premium_users:     { type: integer }
+        total_resources:   { type: integer }
+        total_candidates:  { type: integer }
+        total_instructors: { type: integer }
+        pending_payments:  { type: integer }
+
+    Payment:
+      type: object
+      required: [id, user_id, amount, method, status, created_at]
+      properties:
+        id:               { type: string }
+        user_id:          { type: string }
+        amount:           { type: number }
+        method:           { type: string }
+        transaction_name: { type: ["string", "null"] }
+        phone:            { type: ["string", "null"] }
+        city:             { type: ["string", "null"] }
+        proof_url:        { type: ["string", "null"] }
+        status:           { type: string }
+        created_at:       { type: string }
+
+    PaymentInput:
+      type: object
+      required: [amount, method]
+      properties:
+        amount:           { type: number }
+        method:           { type: string }
+        transaction_name: { type: string }
+        phone:            { type: string }
+        city:             { type: string }
+        proof_url:        { type: string }
+
+    PremiumToggle:
+      type: object
+      required: [is_premium]
+      properties:
+        is_premium:          { type: boolean }
+        premium_expiry_date: { type: ["string", "null"] }
+
+    UserProfile:
+      type: object
+      required: [id, email, role, is_premium, created_at]
+      properties:
+        id:                  { type: string }
+        full_name:           { type: ["string", "null"] }
+        email:               { type: string }
+        phone:               { type: ["string", "null"] }
+        city:                { type: ["string", "null"] }
+        role:                { type: string }
+        domain:              { type: ["string", "null"] }
+        is_premium:          { type: boolean }
+        trial_access:        { type: boolean }
+        premium_expiry_date: { type: ["string", "null"] }
+        created_at:          { type: string }
+
+    Subject:
+      type: object
+      required: [id, name]
+      properties:
+        id:       { type: string }
+        name:     { type: string }
+        cycle_id: { type: ["string", "null"] }
+
+    Cycle:
+      type: object
+      required: [id, name]
+      properties:
+        id:   { type: string }
+        name: { type: string }

@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface HealthStatus {
-  status: string;
+export interface PremiumToggle {
+  is_premium: boolean;
+  /** @nullable */
+  premium_expiry_date?: string | null;
 }
