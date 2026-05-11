@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Groupe Victoire"
+version = "1.0.0"
+id = "artifacts/groupe-victoire"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20981
+
+[services.development]
+run = "pnpm --filter @workspace/groupe-victoire run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/groupe-victoire", "run", "build" ]
+publicDir = "artifacts/groupe-victoire/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20981"
+BASE_PATH = "/"
