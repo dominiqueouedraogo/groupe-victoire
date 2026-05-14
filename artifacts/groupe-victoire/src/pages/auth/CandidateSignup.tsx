@@ -13,7 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ChevronRight, CheckCircle } from "lucide-react";
+import { Loader2, ChevronRight, CheckCircle, Eye, EyeOff } from "lucide-react";
 
 const OTHER_CONCOURS = [
   { id: "ENS", name: "ENS — École Normale Supérieure" },
@@ -34,6 +34,7 @@ const ENA_CYCLES = [
 const LOCATIONS = [
   { id: "abidjan", name: "Abidjan — Lycée Moderne de Cocody" },
   { id: "bouake", name: "Bouaké — Lycée Moderne de Nimbo" },
+  { id: "daloa", name: "Daloa — Lycée Antoine Gauze" },
   { id: "korhogo", name: "Korhogo — Collège Moderne de Korhogo" },
   { id: "enligne", name: "En ligne — Lun-Jeu 20h–22h" },
 ];
@@ -66,6 +67,8 @@ export default function CandidateSignup() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const form = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
@@ -142,14 +145,18 @@ export default function CandidateSignup() {
             Groupe Victoire<span className="text-primary">.</span>
           </span>
         </Link>
-        <p className="text-gray-400 text-xs mt-0.5 tracking-widest uppercase">Travail – Rigueur – Compétence</p>
+        <p className="text-gray-400 text-xs mt-0.5 tracking-widest uppercase">
+          Travail – Rigueur – Compétence
+        </p>
       </div>
 
       <div className="flex-1 flex items-start justify-center p-4 py-10">
         <div className="w-full max-w-2xl space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-bold font-serif text-gray-900">Inscription Candidat</h2>
-            <p className="text-sm text-gray-500 mt-1">Créez votre compte pour commencer votre préparation</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Créez votre compte pour commencer votre préparation
+            </p>
           </div>
 
           <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 sm:p-8">
@@ -173,7 +180,7 @@ export default function CandidateSignup() {
                       <FormItem>
                         <FormLabel className="text-gray-700">Adresse email</FormLabel>
                         <FormControl>
-                          <Input placeholder="votre@email.com" className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} />
+                          <Input type="email" autoComplete="email" placeholder="votre@email.com" className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -187,20 +194,54 @@ export default function CandidateSignup() {
                         <FormMessage />
                       </FormItem>
                     )} />
+                    {/* Password */}
                     <FormField control={form.control} name="password" render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-700">Mot de passe</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="••••••••" className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} />
+                          <div className="relative">
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              placeholder="••••••••"
+                              autoComplete="new-password"
+                              className="h-11 rounded-xl border-gray-200 bg-gray-50 pr-11"
+                              {...field}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword((v) => !v)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg"
+                              aria-label={showPassword ? "Masquer" : "Afficher"}
+                            >
+                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            </button>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )} />
+                    {/* Confirm password */}
                     <FormField control={form.control} name="confirm_password" render={({ field }) => (
                       <FormItem className="md:col-span-2">
                         <FormLabel className="text-gray-700">Confirmer le mot de passe</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="••••••••" className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} />
+                          <div className="relative">
+                            <Input
+                              type={showConfirmPassword ? "text" : "password"}
+                              placeholder="••••••••"
+                              autoComplete="new-password"
+                              className="h-11 rounded-xl border-gray-200 bg-gray-50 pr-11"
+                              {...field}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowConfirmPassword((v) => !v)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg"
+                              aria-label={showConfirmPassword ? "Masquer" : "Afficher"}
+                            >
+                              {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            </button>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -220,7 +261,9 @@ export default function CandidateSignup() {
                         <FormControl>
                           <Checkbox checked={field.value} onCheckedChange={field.onChange} className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
                         </FormControl>
-                        <FormLabel className="cursor-pointer font-bold text-gray-900">ENA — École Nationale d'Administration</FormLabel>
+                        <FormLabel className="cursor-pointer font-bold text-gray-900">
+                          ENA — École Nationale d'Administration
+                        </FormLabel>
                       </div>
                       {enaSelected && (
                         <div className="mt-4 pl-7">

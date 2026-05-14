@@ -8,6 +8,7 @@ import { Link } from "wouter";
 const PLANS = [
   { city: "Abidjan", location: "Lycée Moderne de Cocody", forfait: "185 000", mensualite: "25 000", highlight: true },
   { city: "Bouaké", location: "Lycée Moderne de Nimbo", forfait: "160 000", mensualite: "20 000", highlight: false },
+  { city: "Daloa", location: "Lycée Antoine Gauze", forfait: "150 000", mensualite: "20 000", highlight: false },
   { city: "Korhogo", location: "Collège Moderne de Korhogo", forfait: "150 000", mensualite: "20 000", highlight: false },
   { city: "En ligne", location: "Lun–Jeu 20h–22h", forfait: "150 000", mensualite: "20 000", highlight: false },
 ];
@@ -48,7 +49,7 @@ export default function PremiumPage() {
       {/* Pricing cards */}
       <section className="py-16 -mt-6 relative z-10">
         <div className="container mx-auto px-4 max-w-5xl">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
             {PLANS.map((p) => (
               <Card
                 key={p.city}

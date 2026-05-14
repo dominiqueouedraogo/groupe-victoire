@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 
 const signupSchema = z.object({
   full_name: z.string().min(2, "Le nom complet est requis"),
@@ -34,6 +34,8 @@ export default function InstructorSignup() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
@@ -101,130 +103,145 @@ export default function InstructorSignup() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-muted/30 p-4 py-12">
-      <div className="w-full max-w-xl space-y-8">
-        <div className="text-center">
-          <Link href="/" className="inline-block mb-6">
-            <span className="font-serif text-3xl font-bold text-primary">
-              Groupe Victoire<span className="text-[#D4AF37]">.</span>
-            </span>
-          </Link>
-          <h2 className="text-2xl font-bold tracking-tight">Inscription Instructeur</h2>
-          <p className="text-sm text-muted-foreground mt-2">
-            Rejoignez notre équipe d'experts
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <div className="bg-white border-b border-gray-100 py-4 text-center shadow-sm">
+        <Link href="/">
+          <span className="font-serif text-2xl font-bold text-gray-900">
+            Groupe Victoire<span className="text-primary">.</span>
+          </span>
+        </Link>
+        <p className="text-gray-400 text-xs mt-0.5 tracking-widest uppercase">Travail – Rigueur – Compétence</p>
+      </div>
 
-        <div className="bg-card border shadow-sm rounded-xl p-6 sm:p-8">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="full_name"
-                  render={({ field }) => (
+      <div className="flex-1 flex items-start justify-center p-4 py-10">
+        <div className="w-full max-w-xl space-y-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold font-serif text-gray-900">Inscription Instructeur</h2>
+            <p className="text-sm text-gray-500 mt-1">Rejoignez notre équipe d'experts formateurs</p>
+          </div>
+
+          <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 sm:p-8">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField control={form.control} name="full_name" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nom complet</FormLabel>
+                      <FormLabel className="text-gray-700">Nom complet</FormLabel>
                       <FormControl>
-                        <Input placeholder="Jean Dupont" {...field} data-testid="input-fullname" />
+                        <Input placeholder="Jean Kouassi" className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} data-testid="input-fullname" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
+                  )} />
+                  <FormField control={form.control} name="email" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Adresse email</FormLabel>
+                      <FormLabel className="text-gray-700">Adresse email</FormLabel>
                       <FormControl>
-                        <Input placeholder="nom@exemple.com" {...field} data-testid="input-email" />
+                        <Input type="email" autoComplete="email" placeholder="votre@email.com" className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} data-testid="input-email" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
+                  )} />
+                  <FormField control={form.control} name="phone" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Téléphone</FormLabel>
+                      <FormLabel className="text-gray-700">Téléphone</FormLabel>
                       <FormControl>
-                        <Input placeholder="+221 77 XXX XX XX" {...field} data-testid="input-phone" />
+                        <Input placeholder="0504763249" className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} data-testid="input-phone" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="city"
-                  render={({ field }) => (
+                  )} />
+                  <FormField control={form.control} name="city" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ville</FormLabel>
+                      <FormLabel className="text-gray-700">Ville</FormLabel>
                       <FormControl>
-                        <Input placeholder="Dakar" {...field} data-testid="input-city" />
+                        <Input placeholder="Abidjan, Bouaké..." className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} data-testid="input-city" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="domain"
-                  render={({ field }) => (
+                  )} />
+                  <FormField control={form.control} name="domain" render={({ field }) => (
                     <FormItem className="md:col-span-2">
-                      <FormLabel>Domaine / Spécialisation</FormLabel>
+                      <FormLabel className="text-gray-700">Domaine / Spécialisation</FormLabel>
                       <FormControl>
-                        <Input placeholder="Droit Public, Économie, etc." {...field} data-testid="input-domain" />
+                        <Input placeholder="Droit Public, Économie, Culture Générale..." className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} data-testid="input-domain" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
+                  )} />
+                  <FormField control={form.control} name="password" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Mot de passe</FormLabel>
+                      <FormLabel className="text-gray-700">Mot de passe</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="••••••••" {...field} data-testid="input-password" />
+                        <div className="relative">
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="••••••••"
+                            autoComplete="new-password"
+                            className="h-11 rounded-xl border-gray-200 bg-gray-50 pr-11"
+                            {...field}
+                            data-testid="input-password"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword((v) => !v)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg"
+                            aria-label={showPassword ? "Masquer" : "Afficher"}
+                          >
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="confirm_password"
-                  render={({ field }) => (
+                  )} />
+                  <FormField control={form.control} name="confirm_password" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Confirmer le mot de passe</FormLabel>
+                      <FormLabel className="text-gray-700">Confirmer le mot de passe</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="••••••••" {...field} data-testid="input-confirm-password" />
+                        <div className="relative">
+                          <Input
+                            type={showConfirmPassword ? "text" : "password"}
+                            placeholder="••••••••"
+                            autoComplete="new-password"
+                            className="h-11 rounded-xl border-gray-200 bg-gray-50 pr-11"
+                            {...field}
+                            data-testid="input-confirm-password"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowConfirmPassword((v) => !v)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg"
+                            aria-label={showConfirmPassword ? "Masquer" : "Afficher"}
+                          >
+                            {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )}
-                />
-              </div>
+                  )} />
+                </div>
 
-              <Button type="submit" className="w-full bg-[#D4AF37] hover:bg-[#D4AF37]/90 text-white mt-8" disabled={isLoading} data-testid="button-submit">
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Devenir instructeur"}
-              </Button>
-            </form>
-          </Form>
+                <Button
+                  type="submit"
+                  className="w-full bg-primary hover:bg-orange-600 text-white font-bold h-12 rounded-xl shadow-sm shadow-orange-200 mt-2"
+                  disabled={isLoading}
+                  data-testid="button-submit"
+                >
+                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Devenir instructeur"}
+                </Button>
+              </form>
+            </Form>
 
-          <div className="mt-6 text-center text-sm">
-            <p className="text-muted-foreground">
-              Déjà un compte ?{" "}
-              <Link href="/auth/login" className="text-primary font-medium hover:underline">
-                Se connecter
-              </Link>
-            </p>
+            <div className="mt-5 pt-5 border-t border-gray-100 text-center text-sm">
+              <p className="text-gray-500">
+                Déjà un compte ?{" "}
+                <Link href="/auth/login" className="text-primary font-semibold hover:underline">
+                  Se connecter
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>

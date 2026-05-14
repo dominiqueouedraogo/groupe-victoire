@@ -5,7 +5,9 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { AuthProvider } from "@/contexts/AuthContext"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import Landing from "@/pages/Landing"
+import AuthLanding from "@/pages/auth/AuthLanding"
 import Login from "@/pages/auth/Login"
+import ForgotPassword from "@/pages/auth/ForgotPassword"
 import CandidateSignup from "@/pages/auth/CandidateSignup"
 import InstructorSignup from "@/pages/auth/InstructorSignup"
 import CandidateDashboard from "@/pages/dashboard/CandidateDashboard"
@@ -22,10 +24,15 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Landing} />
+      <Route path="/auth" component={AuthLanding} />
       <Route path="/auth/login" component={Login} />
+      <Route path="/auth/forgot-password" component={ForgotPassword} />
       <Route path="/auth/signup/candidate" component={CandidateSignup} />
       <Route path="/auth/signup/instructor" component={InstructorSignup} />
       <Route path="/dashboard" component={CandidateDashboard} />
+      <Route path="/dashboard/cours" component={CandidateDashboard} />
+      <Route path="/dashboard/annales" component={CandidateDashboard} />
+      <Route path="/dashboard/conseils" component={CandidateDashboard} />
       <Route path="/dashboard/resource/:id" component={ResourceDetail} />
       <Route path="/instructor" component={InstructorDashboard} />
       <Route path="/admin" component={AdminDashboard} />

@@ -111,7 +111,7 @@ export default function Navbar() {
                 <Link href="/auth/login">Connexion</Link>
               </Button>
               <Button asChild size="sm" className="bg-primary hover:bg-orange-600 text-white font-semibold rounded-xl shadow-sm shadow-orange-200 px-5">
-                <Link href="/auth/signup/candidate">S'inscrire</Link>
+                <Link href="/auth">S'inscrire</Link>
               </Button>
             </div>
           )}
@@ -155,7 +155,7 @@ export default function Navbar() {
                       Connexion
                     </Link>
                     <Button asChild className="bg-primary hover:bg-orange-600 text-white font-semibold rounded-xl mt-2">
-                      <Link href="/auth/signup/candidate">S'inscrire maintenant</Link>
+                      <Link href="/auth">S'inscrire maintenant</Link>
                     </Button>
                   </>
                 )}

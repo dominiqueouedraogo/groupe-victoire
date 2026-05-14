@@ -37,6 +37,7 @@ const TESTIMONIALS = [
 const PRICING = [
   { city: "Abidjan", location: "Lycée Moderne de Cocody", forfait: "185 000", mensualite: "25 000", highlight: true },
   { city: "Bouaké", location: "Lycée Moderne de Nimbo", forfait: "160 000", mensualite: "20 000", highlight: false },
+  { city: "Daloa", location: "Lycée Antoine Gauze", forfait: "150 000", mensualite: "20 000", highlight: false },
   { city: "Korhogo", location: "Collège Moderne de Korhogo", forfait: "150 000", mensualite: "20 000", highlight: false },
   { city: "En ligne", location: "Lun–Jeu 20h–22h", forfait: "150 000", mensualite: "20 000", highlight: false },
 ];
@@ -247,12 +248,12 @@ export default function Landing() {
             <Badge className="bg-orange-100 text-orange-700 border-orange-200 mb-3">Tarifs</Badge>
             <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-4">Des tarifs adaptés à votre situation</h2>
           </div>
-          <div className="text-center mb-10">
+          <div className="text-center mb-8">
             <span className="inline-flex items-center gap-2 bg-orange-50 border border-orange-200 rounded-full px-6 py-2.5 text-sm font-semibold text-orange-700">
               <Star className="h-4 w-4" /> Frais d'inscription : 10 000 FCFA
             </span>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 max-w-6xl mx-auto">
             {PRICING.map((p, i) => (
               <motion.div
                 key={p.city}
@@ -380,6 +381,7 @@ export default function Landing() {
               <ul className="space-y-2.5 text-sm text-gray-400">
                 <li className="flex items-start gap-2"><MapPin className="h-4 w-4 text-primary mt-0.5 shrink-0" /> Abidjan — Lycée Moderne de Cocody</li>
                 <li className="flex items-start gap-2"><MapPin className="h-4 w-4 text-primary mt-0.5 shrink-0" /> Bouaké — Lycée Moderne de Nimbo</li>
+                <li className="flex items-start gap-2"><MapPin className="h-4 w-4 text-primary mt-0.5 shrink-0" /> Daloa — Lycée Antoine Gauze</li>
                 <li className="flex items-start gap-2"><MapPin className="h-4 w-4 text-primary mt-0.5 shrink-0" /> Korhogo — Collège Moderne de Korhogo</li>
                 <li className="flex items-start gap-2"><Clock className="h-4 w-4 text-primary mt-0.5 shrink-0" /> En ligne — Lun–Jeu 20h–22h</li>
               </ul>

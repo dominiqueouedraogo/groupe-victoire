@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowRight } from "lucide-react";
+import { Loader2, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().email("Adresse email invalide"),
@@ -21,6 +21,7 @@ export default function Login() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -34,13 +35,10 @@ export default function Login() {
         email: values.email,
         password: values.password,
       });
-
       if (error) throw error;
 
       if (data.user) {
-        // Try to get profile; fall back to user_metadata for role
         let redirectRole = data.user.user_metadata?.role || "candidate";
-
         try {
           const { data: profileData } = await supabase
             .from("profiles")
@@ -48,12 +46,9 @@ export default function Login() {
             .eq("id", data.user.id)
             .single();
           if (profileData?.role) redirectRole = profileData.role;
-        } catch (_) {
-          // profile may not exist yet — use user_metadata role
-        }
+        } catch (_) {}
 
         toast({ title: "Connexion réussie", description: "Bienvenue sur Groupe Victoire !" });
-
         if (redirectRole === "admin") setLocation("/admin");
         else if (redirectRole === "instructor") setLocation("/instructor");
         else setLocation("/dashboard");
@@ -81,7 +76,9 @@ export default function Login() {
             Groupe Victoire<span className="text-primary">.</span>
           </span>
         </Link>
-        <p className="text-gray-400 text-xs mt-0.5 tracking-widest uppercase">Travail – Rigueur – Compétence</p>
+        <p className="text-gray-400 text-xs mt-0.5 tracking-widest uppercase">
+          Travail – Rigueur – Compétence
+        </p>
       </div>
 
       {/* Form */}
@@ -89,7 +86,9 @@ export default function Login() {
         <div className="w-full max-w-md space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-bold font-serif text-gray-900">Bon retour parmi nous</h2>
-            <p className="text-sm text-gray-500 mt-1">Entrez vos identifiants pour accéder à votre compte</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Entrez vos identifiants pour accéder à votre compte
+            </p>
           </div>
 
           <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 sm:p-8">
@@ -104,6 +103,8 @@ export default function Login() {
                       <FormControl>
                         <Input
                           placeholder="votre@email.com"
+                          type="email"
+                          autoComplete="email"
                           className="h-11 rounded-xl border-gray-200 focus:ring-primary bg-gray-50"
                           {...field}
                           data-testid="input-email"
@@ -118,15 +119,34 @@ export default function Login() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-700 font-medium">Mot de passe</FormLabel>
+                      <div className="flex items-center justify-between">
+                        <FormLabel className="text-gray-700 font-medium">Mot de passe</FormLabel>
+                        <Link
+                          href="/auth/forgot-password"
+                          className="text-xs text-primary hover:underline font-medium"
+                        >
+                          Mot de passe oublié ?
+                        </Link>
+                      </div>
                       <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="••••••••"
-                          className="h-11 rounded-xl border-gray-200 focus:ring-primary bg-gray-50"
-                          {...field}
-                          data-testid="input-password"
-                        />
+                        <div className="relative">
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="••••••••"
+                            autoComplete="current-password"
+                            className="h-11 rounded-xl border-gray-200 focus:ring-primary bg-gray-50 pr-11"
+                            {...field}
+                            data-testid="input-password"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword((v) => !v)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg"
+                            aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                          >
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
