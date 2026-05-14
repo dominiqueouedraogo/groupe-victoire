@@ -6,30 +6,19 @@ import * as z from "zod";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+  Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ChevronRight } from "lucide-react";
+import { Loader2, ChevronRight, CheckCircle } from "lucide-react";
 
 const OTHER_CONCOURS = [
   { id: "ENS", name: "ENS — École Normale Supérieure" },
-  { id: "INFAS", name: "INFAS — Institut National de Formation des Agents de Santé" },
-  { id: "INFS", name: "INFS — Institut National de Formation Sociale" },
+  { id: "INFAS", name: "INFAS — Institut de Formation des Agents de Santé" },
+  { id: "INFS", name: "INFS — Institut de Formation Sociale" },
   { id: "EAUX_FORETS", name: "Eaux et Forêts" },
   { id: "POLICE", name: "Police Nationale" },
   { id: "GENDARMERIE", name: "Gendarmerie Nationale" },
@@ -81,16 +70,9 @@ export default function CandidateSignup() {
   const form = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      full_name: "",
-      email: "",
-      phone: "",
-      password: "",
-      confirm_password: "",
-      ena_selected: false,
-      ena_cycles: [],
-      other_concours: [],
-      location: "",
-      payment_type: "forfait",
+      full_name: "", email: "", phone: "", password: "", confirm_password: "",
+      ena_selected: false, ena_cycles: [], other_concours: [],
+      location: "", payment_type: "forfait",
     },
   });
 
@@ -99,7 +81,6 @@ export default function CandidateSignup() {
   async function onSubmit(values: SignupForm) {
     setIsLoading(true);
     try {
-      // Build enrolled concours list
       const enrolledConcours = [
         ...(values.ena_selected ? values.ena_cycles.map((c) => ({ type: "ENA", cycle: c })) : []),
         ...values.other_concours.map((c) => ({ type: c, cycle: null })),
@@ -123,8 +104,7 @@ export default function CandidateSignup() {
       if (authError) throw authError;
 
       if (authData.user) {
-        // Insert profile — use upsert to avoid duplicate key issues
-        const { error: profileError } = await supabase.from("profiles").upsert({
+        await supabase.from("profiles").upsert({
           id: authData.user.id,
           full_name: values.full_name,
           email: values.email,
@@ -135,145 +115,144 @@ export default function CandidateSignup() {
           trial_access: true,
         }, { onConflict: "id" });
 
-        // Log profile error but don't block the signup
-        if (profileError) {
-          console.warn("Profile upsert:", profileError.message);
-        }
-
-        toast({
-          title: "Inscription réussie",
-          description: "Bienvenue dans Groupe Victoire ! Votre compte est en cours d'activation.",
-        });
-
+        toast({ title: "Inscription réussie !", description: "Bienvenue dans Groupe Victoire !" });
         setLocation("/dashboard");
       }
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Erreur d'inscription",
-        description: error.message || "Une erreur est survenue lors de l'inscription.",
+        description: error.message || "Une erreur est survenue. Veuillez réessayer.",
       });
     } finally {
       setIsLoading(false);
     }
   }
 
+  const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+    <p className="text-xs font-bold text-primary uppercase tracking-widest mb-4">{children}</p>
+  );
+
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      {/* Top bar */}
-      <div className="bg-[#0D0D0D] text-white py-4 px-4 text-center">
-        <Link href="/" className="font-serif text-2xl font-bold">
-          Groupe Victoire<span className="text-[#C9A227]">.</span>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-100 py-4 text-center shadow-sm">
+        <Link href="/">
+          <span className="font-serif text-2xl font-bold text-gray-900">
+            Groupe Victoire<span className="text-primary">.</span>
+          </span>
         </Link>
-        <p className="text-white/50 text-xs mt-1 tracking-widest uppercase">Travail – Rigueur – Compétence</p>
+        <p className="text-gray-400 text-xs mt-0.5 tracking-widest uppercase">Travail – Rigueur – Compétence</p>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-4 py-10">
+      <div className="flex-1 flex items-start justify-center p-4 py-10">
         <div className="w-full max-w-2xl space-y-6">
           <div className="text-center">
-            <h2 className="text-2xl font-bold font-serif">Inscription Candidat</h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Créez votre compte pour commencer votre préparation
-            </p>
+            <h2 className="text-2xl font-bold font-serif text-gray-900">Inscription Candidat</h2>
+            <p className="text-sm text-gray-500 mt-1">Créez votre compte pour commencer votre préparation</p>
           </div>
 
-          <div className="bg-card border shadow-sm rounded-2xl p-6 sm:p-8">
+          <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 sm:p-8">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 
                 {/* Personal info */}
                 <div>
-                  <h3 className="font-semibold text-sm uppercase tracking-wider text-[#C9A227] mb-4">Informations personnelles</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <SectionTitle>Informations personnelles</SectionTitle>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField control={form.control} name="full_name" render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nom complet</FormLabel>
-                        <FormControl><Input placeholder="Ex: Konan Aya" {...field} /></FormControl>
+                        <FormLabel className="text-gray-700">Nom complet</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Ex: Konan Aya" className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )} />
                     <FormField control={form.control} name="email" render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Adresse email</FormLabel>
-                        <FormControl><Input placeholder="votre@email.com" {...field} /></FormControl>
+                        <FormLabel className="text-gray-700">Adresse email</FormLabel>
+                        <FormControl>
+                          <Input placeholder="votre@email.com" className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )} />
                     <FormField control={form.control} name="phone" render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Téléphone</FormLabel>
-                        <FormControl><Input placeholder="0504763249" {...field} /></FormControl>
+                        <FormLabel className="text-gray-700">Téléphone</FormLabel>
+                        <FormControl>
+                          <Input placeholder="0504763249" className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )} />
                     <FormField control={form.control} name="password" render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Mot de passe</FormLabel>
-                        <FormControl><Input type="password" placeholder="••••••••" {...field} /></FormControl>
+                        <FormLabel className="text-gray-700">Mot de passe</FormLabel>
+                        <FormControl>
+                          <Input type="password" placeholder="••••••••" className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )} />
                     <FormField control={form.control} name="confirm_password" render={({ field }) => (
                       <FormItem className="md:col-span-2">
-                        <FormLabel>Confirmer le mot de passe</FormLabel>
-                        <FormControl><Input type="password" placeholder="••••••••" {...field} /></FormControl>
+                        <FormLabel className="text-gray-700">Confirmer le mot de passe</FormLabel>
+                        <FormControl>
+                          <Input type="password" placeholder="••••••••" className="h-11 rounded-xl border-gray-200 bg-gray-50" {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )} />
                   </div>
                 </div>
 
-                {/* Concours selection */}
+                {/* Concours */}
                 <div>
-                  <h3 className="font-semibold text-sm uppercase tracking-wider text-[#C9A227] mb-4">Concours préparés</h3>
-                  <p className="text-xs text-muted-foreground mb-4">Sélectionnez un ou plusieurs concours</p>
+                  <SectionTitle>Concours préparés</SectionTitle>
+                  <p className="text-xs text-gray-500 mb-4">Sélectionnez un ou plusieurs concours</p>
 
-                  {/* ENA */}
-                  <div className={`rounded-xl border-2 p-4 mb-3 transition-colors ${enaSelected ? "border-[#C9A227] bg-[#C9A227]/5" : "border-border"}`}>
-                    <FormField control={form.control} name="ena_selected" render={({ field }) => (
-                      <FormItem className="flex items-center gap-3 space-y-0 mb-0">
+                  {/* ENA block */}
+                  <FormField control={form.control} name="ena_selected" render={({ field }) => (
+                    <FormItem className={`rounded-xl border-2 p-4 mb-3 transition-colors ${enaSelected ? "border-primary bg-orange-50" : "border-gray-200 bg-white"}`}>
+                      <div className="flex items-center gap-3">
                         <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
+                          <Checkbox checked={field.value} onCheckedChange={field.onChange} className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
                         </FormControl>
-                        <div>
-                          <FormLabel className="cursor-pointer font-bold text-base">ENA — École Nationale d'Administration</FormLabel>
-                        </div>
-                      </FormItem>
-                    )} />
-
-                    {enaSelected && (
-                      <div className="mt-4 pl-6 space-y-2">
-                        <p className="text-xs text-muted-foreground mb-2 font-medium">Sélectionnez votre cycle :</p>
-                        <FormField control={form.control} name="ena_cycles" render={() => (
-                          <FormItem>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                              {ENA_CYCLES.map((cycle) => (
-                                <FormField key={cycle.id} control={form.control} name="ena_cycles" render={({ field }) => (
-                                  <FormItem className="flex items-center gap-2 space-y-0 rounded-lg border p-3 bg-background">
-                                    <FormControl>
-                                      <Checkbox
-                                        checked={field.value?.includes(cycle.id)}
-                                        onCheckedChange={(checked) => {
-                                          return checked
-                                            ? field.onChange([...field.value, cycle.id])
-                                            : field.onChange(field.value?.filter((v) => v !== cycle.id));
-                                        }}
-                                      />
-                                    </FormControl>
-                                    <FormLabel className="cursor-pointer font-normal text-sm">{cycle.name}</FormLabel>
-                                  </FormItem>
-                                )} />
-                              ))}
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
+                        <FormLabel className="cursor-pointer font-bold text-gray-900">ENA — École Nationale d'Administration</FormLabel>
                       </div>
-                    )}
-                  </div>
+                      {enaSelected && (
+                        <div className="mt-4 pl-7">
+                          <p className="text-xs text-gray-500 mb-3 font-medium">Sélectionnez votre cycle :</p>
+                          <FormField control={form.control} name="ena_cycles" render={() => (
+                            <FormItem>
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                {ENA_CYCLES.map((cycle) => (
+                                  <FormField key={cycle.id} control={form.control} name="ena_cycles" render={({ field }) => (
+                                    <FormItem className={`flex items-center gap-2 rounded-xl border p-3 cursor-pointer transition-colors ${field.value?.includes(cycle.id) ? "bg-white border-primary" : "bg-white border-gray-200"}`}>
+                                      <FormControl>
+                                        <Checkbox
+                                          checked={field.value?.includes(cycle.id)}
+                                          onCheckedChange={(c) => c
+                                            ? field.onChange([...field.value, cycle.id])
+                                            : field.onChange(field.value?.filter((v) => v !== cycle.id))
+                                          }
+                                          className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                        />
+                                      </FormControl>
+                                      <FormLabel className="cursor-pointer font-normal text-sm text-gray-700">{cycle.name}</FormLabel>
+                                    </FormItem>
+                                  )} />
+                                ))}
+                              </div>
+                              <FormMessage />
+                            </FormItem>
+                          )} />
+                        </div>
+                      )}
+                    </FormItem>
+                  )} />
 
                   {/* Other concours */}
                   <FormField control={form.control} name="other_concours" render={() => (
@@ -283,18 +262,18 @@ export default function CandidateSignup() {
                           <FormField key={concours.id} control={form.control} name="other_concours" render={({ field }) => {
                             const checked = field.value?.includes(concours.id);
                             return (
-                              <FormItem className={`flex items-center gap-3 space-y-0 rounded-xl border-2 p-3 transition-colors cursor-pointer ${checked ? "border-[#C9A227] bg-[#C9A227]/5" : "border-border"}`}>
+                              <FormItem className={`flex items-center gap-3 rounded-xl border-2 p-3 cursor-pointer transition-all ${checked ? "border-primary bg-orange-50" : "border-gray-200 bg-white hover:border-gray-300"}`}>
                                 <FormControl>
                                   <Checkbox
                                     checked={checked}
-                                    onCheckedChange={(c) => {
-                                      return c
-                                        ? field.onChange([...field.value, concours.id])
-                                        : field.onChange(field.value?.filter((v) => v !== concours.id));
-                                    }}
+                                    onCheckedChange={(c) => c
+                                      ? field.onChange([...field.value, concours.id])
+                                      : field.onChange(field.value?.filter((v) => v !== concours.id))
+                                    }
+                                    className="border-gray-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                   />
                                 </FormControl>
-                                <FormLabel className="cursor-pointer font-medium text-sm leading-snug">{concours.name}</FormLabel>
+                                <FormLabel className="cursor-pointer font-medium text-sm text-gray-700 leading-snug">{concours.name}</FormLabel>
                               </FormItem>
                             );
                           }} />
@@ -307,18 +286,18 @@ export default function CandidateSignup() {
 
                 {/* Location */}
                 <div>
-                  <h3 className="font-semibold text-sm uppercase tracking-wider text-[#C9A227] mb-4">Lieu de formation</h3>
+                  <SectionTitle>Lieu de formation</SectionTitle>
                   <FormField control={form.control} name="location" render={({ field }) => (
                     <FormItem>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
-                          <SelectTrigger className="h-12 rounded-xl">
+                          <SelectTrigger className="h-12 rounded-xl border-gray-200 bg-gray-50">
                             <SelectValue placeholder="Choisissez votre ville / modalité" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent className="rounded-xl">
                           {LOCATIONS.map((loc) => (
-                            <SelectItem key={loc.id} value={loc.id}>{loc.name}</SelectItem>
+                            <SelectItem key={loc.id} value={loc.id} className="rounded-lg">{loc.name}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -327,25 +306,25 @@ export default function CandidateSignup() {
                   )} />
                 </div>
 
-                {/* Payment option */}
+                {/* Payment */}
                 <div>
-                  <h3 className="font-semibold text-sm uppercase tracking-wider text-[#C9A227] mb-4">Mode de paiement</h3>
+                  <SectionTitle>Mode de paiement</SectionTitle>
                   <FormField control={form.control} name="payment_type" render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <RadioGroup value={field.value} onValueChange={field.onChange} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <label className={`flex items-start gap-3 rounded-xl border-2 p-4 cursor-pointer transition-colors ${field.value === "forfait" ? "border-[#C9A227] bg-[#C9A227]/5" : "border-border"}`}>
-                            <RadioGroupItem value="forfait" className="mt-0.5" />
+                          <label className={`flex items-start gap-3 rounded-xl border-2 p-4 cursor-pointer transition-all ${field.value === "forfait" ? "border-primary bg-orange-50" : "border-gray-200 bg-white hover:border-gray-300"}`}>
+                            <RadioGroupItem value="forfait" className="mt-0.5 border-gray-300 text-primary" />
                             <div>
-                              <p className="font-bold">Forfait complet</p>
-                              <p className="text-xs text-muted-foreground mt-0.5">Paiement unique — à partir de 150 000 FCFA</p>
+                              <p className="font-bold text-gray-900">Forfait complet</p>
+                              <p className="text-xs text-gray-500 mt-0.5">Paiement unique — à partir de 150 000 FCFA</p>
                             </div>
                           </label>
-                          <label className={`flex items-start gap-3 rounded-xl border-2 p-4 cursor-pointer transition-colors ${field.value === "mensualites" ? "border-[#C9A227] bg-[#C9A227]/5" : "border-border"}`}>
-                            <RadioGroupItem value="mensualites" className="mt-0.5" />
+                          <label className={`flex items-start gap-3 rounded-xl border-2 p-4 cursor-pointer transition-all ${field.value === "mensualites" ? "border-primary bg-orange-50" : "border-gray-200 bg-white hover:border-gray-300"}`}>
+                            <RadioGroupItem value="mensualites" className="mt-0.5 border-gray-300 text-primary" />
                             <div>
-                              <p className="font-bold">Mensualités</p>
-                              <p className="text-xs text-muted-foreground mt-0.5">À partir de 20 000 FCFA / mois</p>
+                              <p className="font-bold text-gray-900">Mensualités</p>
+                              <p className="text-xs text-gray-500 mt-0.5">À partir de 20 000 FCFA / mois</p>
                             </div>
                           </label>
                         </RadioGroup>
@@ -355,13 +334,17 @@ export default function CandidateSignup() {
                   )} />
                 </div>
 
-                <div className="bg-[#C9A227]/10 border border-[#C9A227]/30 rounded-xl p-4 text-sm text-center text-muted-foreground">
-                  Des frais d'inscription de <strong className="text-foreground">10 000 FCFA</strong> seront à régler lors de votre première séance.
+                {/* Reminder */}
+                <div className="flex items-center gap-3 bg-orange-50 border border-orange-200 rounded-xl p-4">
+                  <CheckCircle className="h-5 w-5 text-primary shrink-0" />
+                  <p className="text-sm text-gray-700">
+                    Des frais d'inscription de <strong>10 000 FCFA</strong> seront à régler lors de votre première séance.
+                  </p>
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-[#C9A227] hover:bg-[#b8911f] text-black font-bold h-12 text-base rounded-xl"
+                  className="w-full bg-primary hover:bg-orange-600 text-white font-bold h-12 text-base rounded-xl shadow-sm shadow-orange-200"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -373,10 +356,10 @@ export default function CandidateSignup() {
               </form>
             </Form>
 
-            <div className="mt-6 text-center text-sm">
-              <p className="text-muted-foreground">
+            <div className="mt-5 pt-5 border-t border-gray-100 text-center text-sm">
+              <p className="text-gray-500">
                 Déjà un compte ?{" "}
-                <Link href="/auth/login" className="text-[#C9A227] font-semibold hover:underline">
+                <Link href="/auth/login" className="text-primary font-semibold hover:underline">
                   Se connecter
                 </Link>
               </p>

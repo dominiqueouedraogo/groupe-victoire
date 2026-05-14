@@ -6,17 +6,11 @@ import * as z from "zod";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+  Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
-import { Profile } from "@/types";
+import { Loader2, ArrowRight } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().email("Adresse email invalide"),
@@ -30,10 +24,7 @@ export default function Login() {
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
@@ -47,36 +38,34 @@ export default function Login() {
       if (error) throw error;
 
       if (data.user) {
-        const { data: profileData, error: profileError } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", data.user.id)
-          .single();
+        // Try to get profile; fall back to user_metadata for role
+        let redirectRole = data.user.user_metadata?.role || "candidate";
 
-        if (profileError) throw profileError;
-
-        const profile = profileData as Profile;
-        
-        toast({
-          title: "Connexion réussie",
-          description: "Bienvenue sur Groupe Victoire !",
-        });
-
-        if (profile.role === "admin") {
-          setLocation("/admin");
-        } else if (profile.role === "instructor") {
-          setLocation("/instructor");
-        } else {
-          setLocation("/dashboard");
+        try {
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("role")
+            .eq("id", data.user.id)
+            .single();
+          if (profileData?.role) redirectRole = profileData.role;
+        } catch (_) {
+          // profile may not exist yet — use user_metadata role
         }
+
+        toast({ title: "Connexion réussie", description: "Bienvenue sur Groupe Victoire !" });
+
+        if (redirectRole === "admin") setLocation("/admin");
+        else if (redirectRole === "instructor") setLocation("/instructor");
+        else setLocation("/dashboard");
       }
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Erreur de connexion",
-        description: error.message === "Invalid login credentials" 
-          ? "Email ou mot de passe incorrect." 
-          : "Une erreur est survenue lors de la connexion.",
+        description:
+          error.message === "Invalid login credentials"
+            ? "Email ou mot de passe incorrect."
+            : "Une erreur est survenue lors de la connexion.",
       });
     } finally {
       setIsLoading(false);
@@ -84,70 +73,94 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-muted/30 p-4">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <Link href="/" className="inline-block mb-6">
-            <span className="font-serif text-3xl font-bold text-primary">
-              Groupe Victoire<span className="text-[#D4AF37]">.</span>
-            </span>
-          </Link>
-          <h2 className="text-2xl font-bold tracking-tight">Bon retour parmi nous</h2>
-          <p className="text-sm text-muted-foreground mt-2">
-            Entrez vos identifiants pour accéder à votre compte
-          </p>
-        </div>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Top bar */}
+      <div className="bg-white border-b border-gray-100 py-4 text-center shadow-sm">
+        <Link href="/">
+          <span className="font-serif text-2xl font-bold text-gray-900">
+            Groupe Victoire<span className="text-primary">.</span>
+          </span>
+        </Link>
+        <p className="text-gray-400 text-xs mt-0.5 tracking-widest uppercase">Travail – Rigueur – Compétence</p>
+      </div>
 
-        <div className="bg-card border shadow-sm rounded-xl p-6 sm:p-8">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Adresse email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="nom@exemple.com" {...field} data-testid="input-email" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex items-center justify-between">
-                      <FormLabel>Mot de passe</FormLabel>
-                    </div>
-                    <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} data-testid="input-password" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full bg-[#D4AF37] hover:bg-[#D4AF37]/90 text-white" disabled={isLoading} data-testid="button-submit">
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Se connecter"}
-              </Button>
-            </form>
-          </Form>
+      {/* Form */}
+      <div className="flex-1 flex items-center justify-center p-4 py-12">
+        <div className="w-full max-w-md space-y-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold font-serif text-gray-900">Bon retour parmi nous</h2>
+            <p className="text-sm text-gray-500 mt-1">Entrez vos identifiants pour accéder à votre compte</p>
+          </div>
 
-          <div className="mt-6 text-center space-y-2 text-sm">
-            <p className="text-muted-foreground">
-              Nouveau candidat ?{" "}
-              <Link href="/auth/signup/candidate" className="text-primary font-medium hover:underline">
-                Créer un compte
-              </Link>
-            </p>
-            <p className="text-muted-foreground">
-              Vous êtes enseignant ?{" "}
-              <Link href="/auth/signup/instructor" className="text-primary font-medium hover:underline">
-                Devenir instructeur
-              </Link>
-            </p>
+          <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 sm:p-8">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700 font-medium">Adresse email</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="votre@email.com"
+                          className="h-11 rounded-xl border-gray-200 focus:ring-primary bg-gray-50"
+                          {...field}
+                          data-testid="input-email"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700 font-medium">Mot de passe</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="••••••••"
+                          className="h-11 rounded-xl border-gray-200 focus:ring-primary bg-gray-50"
+                          {...field}
+                          data-testid="input-password"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className="w-full bg-primary hover:bg-orange-600 text-white font-bold h-12 rounded-xl shadow-sm shadow-orange-200"
+                  disabled={isLoading}
+                  data-testid="button-submit"
+                >
+                  {isLoading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <>Se connecter <ArrowRight className="ml-2 h-4 w-4" /></>
+                  )}
+                </Button>
+              </form>
+            </Form>
+
+            <div className="mt-6 pt-5 border-t border-gray-100 text-center space-y-2.5 text-sm">
+              <p className="text-gray-500">
+                Nouveau candidat ?{" "}
+                <Link href="/auth/signup/candidate" className="text-primary font-semibold hover:underline">
+                  Créer un compte
+                </Link>
+              </p>
+              <p className="text-gray-500">
+                Vous êtes enseignant ?{" "}
+                <Link href="/auth/signup/instructor" className="text-primary font-semibold hover:underline">
+                  Devenir instructeur
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>
