@@ -36,6 +36,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
 import { Home, Upload, FileText, Newspaper, LogOut, Menu, Trash2, Loader2 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -60,6 +61,8 @@ export default function InstructorDashboard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadingThumb, setUploadingThumb] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -96,6 +99,38 @@ export default function InstructorDashboard() {
       content: "",
     },
   });
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingFile(true);
+    try {
+      const fileName = `${user?.id}/${Date.now()}-${file.name}`;
+      const { error } = await supabase.storage.from("resources").upload(fileName, file);
+      if (error) throw error;
+      const { data: { publicUrl } } = supabase.storage.from("resources").getPublicUrl(fileName);
+      resourceForm.setValue("file_url", publicUrl);
+      toast({ title: "✅ Fichier uploadé avec succès" });
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Erreur upload", description: err.message });
+    } finally { setUploadingFile(false); }
+  };
+
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingThumb(true);
+    try {
+      const fileName = `${user?.id}/thumbnails/${Date.now()}-${file.name}`;
+      const { error } = await supabase.storage.from("resources").upload(fileName, file);
+      if (error) throw error;
+      const { data: { publicUrl } } = supabase.storage.from("resources").getPublicUrl(fileName);
+      resourceForm.setValue("thumbnail_url", publicUrl);
+      toast({ title: "✅ Image uploadée avec succès" });
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Erreur upload", description: err.message });
+    } finally { setUploadingThumb(false); }
+  };
 
   async function onResourceSubmit(values: z.infer<typeof resourceSchema>) {
     createResource.mutate({ data: values }, {
