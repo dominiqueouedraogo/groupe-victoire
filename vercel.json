@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd artifacts/groupe-victoire && pnpm install && pnpm run build",
+  "outputDirectory": "artifacts/groupe-victoire/dist",
+  "installCommand": "pnpm install"
+}
