@@ -57,58 +57,6 @@ const FAQS = [
   { q: "Comment vous contacter ?", a: "Par téléphone au 0504763249 ou 0798625467, par email à groupevictoire47@gmail.com ou via WhatsApp." },
 ];
 
-
-function useCountUp(end: number, duration = 2000, inView = false) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    let start = 0;
-    const step = end / (duration / 16);
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= end) { setCount(end); clearInterval(timer); }
-      else setCount(Math.floor(start));
-    }, 16);
-    return () => clearInterval(timer);
-  }, [inView, end, duration]);
-  return count;
-}
-
-
-function StatItem({ end, suffix, label, inView }: { end: number, suffix: string, label: string, inView: boolean }) {
-  const count = useCountUp(end, 2000, inView);
-  return (
-    <div className="space-y-1">
-      <p className="text-3xl md:text-4xl font-serif font-bold">{count}{suffix}</p>
-      <p className="text-white/80 text-sm font-medium">{label}</p>
-    </div>
-  );
-}
-
-function StatsSection() {
-  const ref = useRef(null);
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setInView(true); },
-      { threshold: 0.3 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-  return (
-    <section ref={ref} className="py-12 bg-primary">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white">
-          <StatItem end={2000} suffix="+" label="Candidats formés" inView={inView} />
-          <StatItem end={85} suffix="%+" label="Taux de réussite" inView={inView} />
-          <StatItem end={8} suffix="" label="Concours préparés" inView={inView} />
-          <StatItem end={4} suffix="" label="Sites de formation" inView={inView} />
-        </div>
-      </div>
-    </section>
-  );
-}
-
 const fadeUp = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } };
 
 export default function Landing() {
@@ -160,7 +108,23 @@ export default function Landing() {
       </section>
 
       {/* ── STATS ── */}
-      <StatsSection />
+      <section className="py-12 bg-primary">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white">
+            {[
+              { val: "2 000+", label: "Candidats formés" },
+              { val: "85%+", label: "Taux de réussite" },
+              { val: "8", label: "Concours préparés" },
+              { val: "4", label: "Sites de formation" },
+            ].map((s) => (
+              <div key={s.label} className="space-y-1">
+                <p className="text-3xl md:text-4xl font-serif font-bold">{s.val}</p>
+                <p className="text-white/80 text-sm font-medium">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ── AVANTAGES ── */}
       <section className="py-20 bg-white">
