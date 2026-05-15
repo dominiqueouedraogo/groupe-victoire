@@ -279,20 +279,36 @@ export default function InstructorDashboard() {
                   )} />
 
                   <FormField control={resourceForm.control} name="file_url" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>URL du fichier (PDF, etc.)</FormLabel>
-                      <FormControl><Input placeholder="https://..." {...field} /></FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
+    <FormItem>
+      <FormLabel>Fichier PDF</FormLabel>
+      <FormControl>
+        <div className="flex items-center gap-3">
+          <label className="flex items-center gap-2 cursor-pointer bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition">
+            {uploadingFile ? <><Loader2 className="h-4 w-4 animate-spin" /> Upload...</> : <><Upload className="h-4 w-4" /> Choisir PDF</>}
+            <input type="file" accept=".pdf" className="hidden" onChange={handleFileUpload} disabled={uploadingFile} />
+          </label>
+          {field.value && <span className="text-sm text-green-600">✅ Fichier prêt</span>}
+        </div>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )} />
 
                   <FormField control={resourceForm.control} name="thumbnail_url" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>URL de l'image de couverture</FormLabel>
-                      <FormControl><Input placeholder="https://..." {...field} /></FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
+    <FormItem>
+      <FormLabel>Image de couverture</FormLabel>
+      <FormControl>
+        <div className="flex items-center gap-3">
+          <label className="flex items-center gap-2 cursor-pointer bg-secondary text-secondary-foreground px-4 py-2 rounded-md hover:bg-secondary/80 transition">
+            {uploadingThumb ? <><Loader2 className="h-4 w-4 animate-spin" /> Upload...</> : <><Upload className="h-4 w-4" /> Choisir image</>}
+            <input type="file" accept="image/*" className="hidden" onChange={handleThumbnailUpload} disabled={uploadingThumb} />
+          </label>
+          {field.value && <img src={field.value} className="h-10 w-10 rounded object-cover" alt="preview" />}
+        </div>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )} />
 
                   <FormField control={resourceForm.control} name="is_free" render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
