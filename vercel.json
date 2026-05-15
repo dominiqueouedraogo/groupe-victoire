@@ -1,5 +1,0 @@
-{
-  "buildCommand": "pnpm --filter groupe-victoire run build",
-  "outputDirectory": "artifacts/groupe-victoire/dist/public",
-  "installCommand": "pnpm install"
-}
