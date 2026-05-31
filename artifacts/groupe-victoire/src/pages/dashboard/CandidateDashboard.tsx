@@ -554,4 +554,18 @@ function ResourceGrid({
 
     </div>
   );
+
+      {showSignoutModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4">
+            <h3 className="text-base font-bold text-gray-900 mb-2">Confirmer la déconnexion</h3>
+            <p className="text-sm text-gray-500 mb-6">Voulez-vous vraiment vous déconnecter ?</p>
+            <div className="flex gap-3 justify-end">
+              <Button variant="ghost" className="rounded-xl" onClick={() => setShowSignoutModal(false)}>Annuler</Button>
+              <Button className="bg-red-500 hover:bg-red-600 text-white rounded-xl" onClick={() => { setShowSignoutModal(false); signOut(); }}>Déconnexion</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
 }
