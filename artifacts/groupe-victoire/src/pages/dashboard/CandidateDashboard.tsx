@@ -461,9 +461,8 @@ export default function CandidateDashboard() {
       </main>
 
       <PremiumModal open={isPremiumModalOpen} onClose={() => setIsPremiumModalOpen(false)} />
-
       {showSignoutModal && (
-        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/60 px-4 pb-6 sm:pb-0">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 px-4 pb-8">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl">
             <div className="text-center mb-5">
               <div className="h-14 w-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -475,6 +474,22 @@ export default function CandidateDashboard() {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowSignoutModal(false)}
+                className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => { setShowSignoutModal(false); signOut(); }}
+                className="flex-1 py-3 rounded-xl bg-red-500 text-white font-semibold text-sm"
+              >
+                Se déconnecter
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      
                 className="flex-1 py-3 rounded-xl border-2 border-gray-200 text-gray-700 font-semibold text-sm"
               >
                 Annuler
