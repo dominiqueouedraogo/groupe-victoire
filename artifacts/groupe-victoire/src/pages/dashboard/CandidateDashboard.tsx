@@ -462,35 +462,19 @@ export default function CandidateDashboard() {
 
       <PremiumModal open={isPremiumModalOpen} onClose={() => setIsPremiumModalOpen(false)} />
       {showSignoutModal && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 px-4 pb-8">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl">
-            <div className="text-center mb-5">
-              <div className="h-14 w-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-3">
-                <LogOut className="h-7 w-7 text-red-500" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900">Déconnexion</h3>
-              <p className="text-gray-500 text-sm mt-1">Voulez-vous vraiment vous déconnecter ?</p>
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowSignoutModal(false)}
-                className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm"
-              >
-                Annuler
-              </button>
-              <button
-                onClick={() => { setShowSignoutModal(false); signOut(); }}
-                className="flex-1 py-3 rounded-xl bg-red-500 text-white font-semibold text-sm"
-              >
-                Se déconnecter
-              </button>
+        <div style={{position:'fixed',inset:0,zIndex:50,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'flex-end',justifyContent:'center',padding:'0 16px 32px'}}>
+          <div style={{background:'white',borderRadius:16,padding:24,width:'100%',maxWidth:400}}>
+            <p style={{fontWeight:'bold',fontSize:18,textAlign:'center',marginBottom:8}}>Déconnexion</p>
+            <p style={{color:'#666',fontSize:14,textAlign:'center',marginBottom:24}}>Voulez-vous vraiment vous déconnecter ?</p>
+            <div style={{display:'flex',gap:12}}>
+              <button onClick={() => setShowSignoutModal(false)} style={{flex:1,padding:'12px',borderRadius:12,border:'1px solid #ddd',fontWeight:600,fontSize:14,background:'white',cursor:'pointer'}}>Annuler</button>
+              <button onClick={() => { setShowSignoutModal(false); signOut(); }} style={{flex:1,padding:'12px',borderRadius:12,background:'#ef4444',color:'white',fontWeight:600,fontSize:14,border:'none',cursor:'pointer'}}>Se déconnecter</button>
             </div>
           </div>
         </div>
       )}
 
-      
-                className="flex-1 py-3 rounded-xl border-2 border-gray-200 text-gray-700 font-semibold text-sm"
+                      className="flex-1 py-3 rounded-xl border-2 border-gray-200 text-gray-700 font-semibold text-sm"
               >
                 Annuler
               </button>
