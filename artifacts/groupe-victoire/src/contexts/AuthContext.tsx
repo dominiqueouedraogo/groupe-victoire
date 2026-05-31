@@ -70,6 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signOut = async () => {
+    if (!window.confirm("Voulez-vous vraiment vous déconnecter ?")) return;
     await supabase.auth.signOut();
     setLocation("/");
   };

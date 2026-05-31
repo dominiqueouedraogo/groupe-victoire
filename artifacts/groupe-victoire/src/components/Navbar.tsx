@@ -118,6 +118,11 @@ export default function Navbar() {
 
           {/* Mobile menu */}
           <Sheet>
+            {!user && (
+              <a href="/auth/login" className="md:hidden text-xs font-bold text-white bg-primary px-3 py-1.5 rounded-lg">
+                Connexion
+              </a>
+            )}
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden rounded-xl hover:bg-gray-100">
                 <Menu className="h-5 w-5 text-gray-600" />
