@@ -43,7 +43,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (!authLoading && !user) setLocation("/auth/login");
-    else if (!authLoading && role !== "admin") setLocation("/");
+    // role redirect removed
   }, [user, role, authLoading, setLocation]);
 
   const { data: stats } = useGetPlatformStats();
