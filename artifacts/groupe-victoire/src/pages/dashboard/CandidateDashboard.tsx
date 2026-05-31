@@ -12,7 +12,6 @@ import {
   Search, Bell, Lock, Menu, GraduationCap,
   BookMarked, Library, Award
 } from "lucide-react";
-import { useListResources } from "@workspace/api-client-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -91,15 +90,8 @@ export default function CandidateDashboard() {
     if (concoursIds.length > 0 && !selectedConcours) setSelectedConcours(concoursIds[0]);
   }, [concoursIds.length]);
 
-  const { data: resources, isLoading: resourcesLoading } = useListResources({
-    search: searchQuery || undefined,
-    content_type: contentType !== "all" ? contentType : undefined,
-  }, {
-    query: {
-      retry: false,
-      throwOnError: false,
-    }
-  });
+  const resources: any[] = [];
+  const resourcesLoading = false;
 
   if (authLoading) {
     return (
