@@ -460,128 +460,19 @@ export default function CandidateDashboard() {
         </div>
       </main>
 
-      <PremiumModal open={isPremiumModalOpen} onClose={() => setIsPremiumModalOpen(false)} />
+
       {showSignoutModal && (
         <div style={{position:'fixed',inset:0,zIndex:50,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'flex-end',justifyContent:'center',padding:'0 16px 32px'}}>
           <div style={{background:'white',borderRadius:16,padding:24,width:'100%',maxWidth:400}}>
             <p style={{fontWeight:'bold',fontSize:18,textAlign:'center',marginBottom:8}}>Déconnexion</p>
             <p style={{color:'#666',fontSize:14,textAlign:'center',marginBottom:24}}>Voulez-vous vraiment vous déconnecter ?</p>
             <div style={{display:'flex',gap:12}}>
-              <button onClick={() => setShowSignoutModal(false)} style={{flex:1,padding:'12px',borderRadius:12,border:'1px solid #ddd',fontWeight:600,fontSize:14,background:'white',cursor:'pointer'}}>Annuler</button>
-              <button onClick={() => { setShowSignoutModal(false); signOut(); }} style={{flex:1,padding:'12px',borderRadius:12,background:'#ef4444',color:'white',fontWeight:600,fontSize:14,border:'none',cursor:'pointer'}}>Se déconnecter</button>
+              <button onClick={() => setShowSignoutModal(false)} style={{flex:1,padding:'12px',borderRadius:12,border:'1px solid #ddd',fontWeight:600,background:'white',cursor:'pointer'}}>Annuler</button>
+              <button onClick={() => { setShowSignoutModal(false); signOut(); }} style={{flex:1,padding:'12px',borderRadius:12,background:'#ef4444',color:'white',fontWeight:600,border:'none',cursor:'pointer'}}>Se déconnecter</button>
             </div>
           </div>
         </div>
       )}
-
-                      className="flex-1 py-3 rounded-xl border-2 border-gray-200 text-gray-700 font-semibold text-sm"
-              >
-                Annuler
-              </button>
-              <button
-                onClick={() => { setShowSignoutModal(false); signOut(); }}
-                className="flex-1 py-3 rounded-xl bg-red-500 text-white font-semibold text-sm"
-              >
-                Se déconnecter
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      
-                className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-medium text-sm hover:bg-gray-50"
-              >
-                Annuler
-              </button>
-              <button
-                onClick={() => setShowSignoutModal(true)}}
-                className="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-medium text-sm hover:bg-red-600"
-              >
-                Se déconnecter
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ResourceGrid({
-  resources,
-  loading,
-  isPremium,
-  onResourceClick,
-}: {
-  resources: any[] | undefined;
-  loading: boolean;
-  isPremium: boolean;
-  onResourceClick: (r: any) => void;
-}) {
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Card key={i} className="overflow-hidden border-0 shadow-sm">
-            <Skeleton className="h-32 w-full rounded-none" />
-            <CardHeader className="p-4"><Skeleton className="h-4 w-2/3 mb-2" /><Skeleton className="h-3 w-1/2" /></CardHeader>
-          </Card>
-        ))}
-      </div>
-    );
-  }
-
-  if (!resources || resources.length === 0) {
-    return (
-      <div className="text-center py-14">
-        <Library className="h-10 w-10 mx-auto mb-3 text-gray-300" />
-        <p className="text-gray-500 text-sm">Aucune ressource disponible pour le moment.</p>
-        <p className="text-gray-400 text-xs mt-1">Revenez bientôt !</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {resources.map((resource) => (
-        <Card
-          key={resource.id}
-          className="overflow-hidden cursor-pointer hover:shadow-md transition-all group border border-gray-100 hover:border-orange-200 hover:-translate-y-0.5 bg-white"
-          onClick={() => onResourceClick(resource)}
-        >
-          <div className="h-32 bg-gradient-to-br from-orange-50 to-orange-100 relative overflow-hidden">
-            {resource.thumbnail_url ? (
-              <img src={resource.thumbnail_url} alt={resource.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                {resource.content_type === "lesson" && <BookOpen className="h-10 w-10 text-primary/40" />}
-                {resource.content_type === "annal" && <FileText className="h-10 w-10 text-primary/40" />}
-                {resource.content_type === "tip" && <Lightbulb className="h-10 w-10 text-primary/40" />}
-              </div>
-            )}
-            {!resource.is_free && !isPremium && (
-              <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center">
-                <div className="bg-white rounded-full p-3 shadow-md">
-                  <Lock className="h-5 w-5 text-primary" />
-                </div>
-              </div>
-            )}
-            <div className="absolute top-2.5 right-2.5">
-              <Badge className={`text-xs shadow-sm ${resource.is_free ? "bg-green-100 text-green-700 border-green-200" : "bg-primary text-white border-0"}`}>
-                {resource.is_free ? "Gratuit" : "Premium"}
-              </Badge>
-            </div>
-          </div>
-          <CardHeader className="p-4">
-            <Badge variant="outline" className="text-xs w-fit mb-2 border-gray-200 text-gray-500">
-              {resource.content_type === "lesson" ? "Cours" : resource.content_type === "annal" ? "Annale" : "Conseil"}
-            </Badge>
-            <CardTitle className="line-clamp-2 text-sm font-semibold text-gray-900">{resource.title}</CardTitle>
-            <CardDescription className="line-clamp-2 text-xs mt-1">{resource.description}</CardDescription>
-          </CardHeader>
-        </Card>
-      ))}
     </div>
   );
 }
