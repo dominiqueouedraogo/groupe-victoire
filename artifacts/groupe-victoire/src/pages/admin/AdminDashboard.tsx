@@ -40,6 +40,7 @@ export default function AdminDashboard() {
 
   const [userSearch, setUserSearch] = useState("");
   const [userRoleFilter, setUserRoleFilter] = useState("all");
+  const [showSignoutModal, setShowSignoutModal] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) setLocation("/auth/login");
@@ -101,7 +102,7 @@ export default function AdminDashboard() {
           <LayoutDashboard className="mr-2 h-5 w-5 text-[#D4AF37]" />
           Administration Victoire
         </div>
-        <Button variant="ghost" className="text-white hover:text-red-300 hover:bg-white/10" onClick={() => { if (window.confirm("Voulez-vous vraiment vous déconnecter ?")) signOut(); }}>
+        <Button variant="ghost" className="text-white hover:text-red-300 hover:bg-white/10" onClick={() => setShowSignoutModal(true)}>
           <LogOut className="mr-2 h-4 w-4" /> Déconnexion
         </Button>
       </header>
@@ -281,6 +282,21 @@ export default function AdminDashboard() {
 
         </Tabs>
       </main>
+    </div>
+  );
+
+      {showSignoutModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4">
+            <h3 className="text-base font-bold text-gray-900 mb-2">Confirmer la déconnexion</h3>
+            <p className="text-sm text-gray-500 mb-6">Voulez-vous vraiment vous déconnecter ?</p>
+            <div className="flex gap-3 justify-end">
+              <button className="px-4 py-2 rounded-xl text-sm text-gray-600 hover:bg-gray-100" onClick={() => setShowSignoutModal(false)}>Annuler</button>
+              <button className="px-4 py-2 rounded-xl text-sm bg-red-500 text-white hover:bg-red-600" onClick={() => { setShowSignoutModal(false); signOut(); }}>Déconnexion</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

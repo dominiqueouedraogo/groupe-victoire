@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { Moon, Sun, Menu, User as UserIcon, LogOut, LayoutDashboard } from "lucide-react";
@@ -14,6 +15,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 export default function Navbar() {
   const { user, profile, role, signOut } = useAuth();
   const { theme, setTheme } = useTheme();
+  const [showSignoutModal, setShowSignoutModal] = useState(false);
 
   const getDashboardLink = () => {
     if (role === "admin") return "/admin";
@@ -97,7 +99,7 @@ export default function Navbar() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-gray-100" />
                 <DropdownMenuItem
-                  onClick={signOut}
+                  onClick={() => setShowSignoutModal(true)}
                   className="rounded-lg mx-1 mb-1 text-red-500 focus:text-red-600 focus:bg-red-50 cursor-pointer"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
@@ -149,7 +151,7 @@ export default function Navbar() {
                     <Link href={getDashboardLink()} className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
                       Tableau de bord
                     </Link>
-                    <button onClick={signOut} className="text-left px-4 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-colors">
+                    <button onClick={() => setShowSignoutModal(true)} className="text-left px-4 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-colors">
                       Déconnexion
                     </button>
                   </>
@@ -169,6 +171,19 @@ export default function Navbar() {
           </Sheet>
         </div>
       </div>
+    </header>
+      {showSignoutModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4">
+            <h3 className="text-base font-bold text-gray-900 mb-2">Confirmer la déconnexion</h3>
+            <p className="text-sm text-gray-500 mb-6">Voulez-vous vraiment vous déconnecter ?</p>
+            <div className="flex gap-3 justify-end">
+              <button className="px-4 py-2 rounded-xl text-sm text-gray-600 hover:bg-gray-100" onClick={() => setShowSignoutModal(false)}>Annuler</button>
+              <button className="px-4 py-2 rounded-xl text-sm bg-red-500 text-white hover:bg-red-600" onClick={() => { setShowSignoutModal(false); signOut(); }}>Déconnexion</button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
