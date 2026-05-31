@@ -66,6 +66,7 @@ export default function CandidateDashboard() {
   const [contentType, setContentType] = useState(getInitialTab);
   const [searchQuery, setSearchQuery] = useState("");
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
+  const [showSignoutModal, setShowSignoutModal] = useState(false);
   const [selectedConcours, setSelectedConcours] = useState<string | null>(null);
 
   // Sync tab when URL changes
@@ -195,7 +196,7 @@ export default function CandidateDashboard() {
 
       <div className="p-3 border-t border-gray-100">
         <button
-          onClick={() => { if (window.confirm("Voulez-vous vraiment vous déconnecter ?")) signOut(); }}
+          onClick={() => setShowSignoutModal(true)}}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all"
         >
           <LogOut className="h-4 w-4 shrink-0" />
@@ -538,6 +539,19 @@ function ResourceGrid({
           </CardHeader>
         </Card>
       ))}
+      {showSignoutModal && (
+        <div style={{position:'fixed',inset:0,zIndex:999,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'flex-end',justifyContent:'center',padding:'0 16px 32px'}}>
+          <div style={{background:'white',borderRadius:16,padding:24,width:'100%',maxWidth:400}}>
+            <p style={{fontWeight:'bold',fontSize:18,textAlign:'center',marginBottom:8}}>Déconnexion</p>
+            <p style={{color:'#666',fontSize:14,textAlign:'center',marginBottom:24}}>Voulez-vous vraiment vous déconnecter ?</p>
+            <div style={{display:'flex',gap:12}}>
+              <button onClick={() => setShowSignoutModal(false)} style={{flex:1,padding:'12px',borderRadius:12,border:'1px solid #ddd',fontWeight:600,background:'white',cursor:'pointer'}}>Annuler</button>
+              <button onClick={() => { setShowSignoutModal(false); signOut(); }} style={{flex:1,padding:'12px',borderRadius:12,background:'#ef4444',color:'white',fontWeight:600,border:'none',cursor:'pointer'}}>Se déconnecter</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
