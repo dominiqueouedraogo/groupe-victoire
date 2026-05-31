@@ -26,9 +26,9 @@ export default function Navbar() {
   const fullName = profile?.full_name || user?.user_metadata?.full_name || "";
 
   return (
+    <>
     <header className="sticky top-0 z-40 w-full border-b border-gray-100 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm">
       <div className="container flex h-16 items-center justify-between mx-auto px-4">
-        {/* Logo */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center shrink-0">
             <span className="font-serif text-xl font-bold text-gray-900">
@@ -36,32 +36,16 @@ export default function Navbar() {
             </span>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
-            <a href="/#formations" className="text-sm font-medium text-gray-600 hover:text-primary transition-colors">
-              Formations
-            </a>
-            <a href="/#tarifs" className="text-sm font-medium text-gray-600 hover:text-primary transition-colors">
-              Tarifs
-            </a>
-            <Link href="/premium" className="text-sm font-medium text-gray-600 hover:text-primary transition-colors">
-              Nos offres
-            </Link>
-            {!user && (
-              <Link href="/auth/login" className="text-sm font-medium text-gray-600 hover:text-primary transition-colors">
-                Connexion
-              </Link>
+            <a href="/#formations" className="text-sm font-medium text-gray-600 hover:text-primary transition-colors">Formations</a>
+            <a href="/#tarifs" className="text-sm font-medium text-gray-600 hover:text-primary transition-colors">Tarifs</a>
+            <Link href="/premium" className="text-sm font-medium text-gray-600 hover:text-primary transition-colors">Nos offres</Link>
+              <Link href="/auth/login" className="text-sm font-medium text-gray-600 hover:text-primary transition-colors">Connexion</Link>
             )}
           </nav>
         </div>
 
-        {/* Right side */}
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-            className="rounded-xl hover:bg-gray-100"
-            aria-label="Changer le thème"
-          >
+          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "light" ? "dark" : "light")} className="rounded-xl hover:bg-gray-100" aria-label="Changer le thème">
             <Sun className="h-4 w-4 dark:hidden text-gray-500" />
             <Moon className="hidden h-4 w-4 dark:block text-gray-400" />
           </Button>
@@ -85,9 +69,7 @@ export default function Navbar() {
                   </div>
                   <div className="flex gap-2 mt-2 flex-wrap">
                     <Badge variant="secondary" className="capitalize text-xs bg-gray-100">{role}</Badge>
-                    {profile?.is_premium && (
-                      <Badge className="bg-primary text-white text-xs">Premium</Badge>
-                    )}
+                    {profile?.is_premium && <Badge className="bg-primary text-white text-xs">Premium</Badge>}
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-gray-100" />
@@ -98,10 +80,7 @@ export default function Navbar() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-gray-100" />
-                <DropdownMenuItem
-                  onClick={() => setShowSignoutModal(true)}
-                  className="rounded-lg mx-1 mb-1 text-red-500 focus:text-red-600 focus:bg-red-50 cursor-pointer"
-                >
+                <DropdownMenuItem onClick={() => setShowSignoutModal(true)} className="rounded-lg mx-1 mb-1 text-red-500 focus:text-red-600 focus:bg-red-50 cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Déconnexion</span>
                 </DropdownMenuItem>
@@ -118,12 +97,8 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* Mobile menu */}
           <Sheet>
-            {!user && (
-              <a href="/auth/login" className="md:hidden text-xs font-bold text-white bg-primary px-3 py-1.5 rounded-lg">
-                Connexion
-              </a>
+              <a href="/auth/login" className="md:hidden text-xs font-bold text-white bg-primary px-3 py-1.5 rounded-lg">Connexion</a>
             )}
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden rounded-xl hover:bg-gray-100">
@@ -133,34 +108,20 @@ export default function Navbar() {
             </SheetTrigger>
             <SheetContent side="right" className="w-72 bg-white border-l border-gray-100">
               <div className="flex flex-col gap-2 mt-8">
-                <Link href="/" className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
-                  Accueil
-                </Link>
-                <a href="/#formations" className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
-                  Formations
-                </a>
-                <a href="/#tarifs" className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
-                  Tarifs
-                </a>
-                <Link href="/premium" className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
-                  Nos offres
-                </Link>
+                <Link href="/" className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">Accueil</Link>
+                <a href="/#formations" className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">Formations</a>
+                <a href="/#tarifs" className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">Tarifs</a>
+                <Link href="/premium" className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">Nos offres</Link>
                 {user ? (
                   <>
                     <div className="border-t border-gray-100 pt-2 mt-2" />
-                    <Link href={getDashboardLink()} className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
-                      Tableau de bord
-                    </Link>
-                    <button onClick={() => setShowSignoutModal(true)} className="text-left px-4 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-colors">
-                      Déconnexion
-                    </button>
+                    <Link href={getDashboardLink()} className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">Tableau de bord</Link>
+                    <button onClick={() => setShowSignoutModal(true)} className="text-left px-4 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-colors">Déconnexion</button>
                   </>
                 ) : (
                   <>
                     <div className="border-t border-gray-100 pt-2 mt-2" />
-                    <Link href="/auth/login" className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                      Connexion
-                    </Link>
+                    <Link href="/auth/login" className="block px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">Connexion</Link>
                     <Button asChild className="bg-primary hover:bg-orange-600 text-white font-semibold rounded-xl mt-2">
                       <Link href="/auth">S'inscrire maintenant</Link>
                     </Button>
@@ -172,18 +133,18 @@ export default function Navbar() {
         </div>
       </div>
     </header>
-      {showSignoutModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4">
-            <h3 className="text-base font-bold text-gray-900 mb-2">Confirmer la déconnexion</h3>
-            <p className="text-sm text-gray-500 mb-6">Voulez-vous vraiment vous déconnecter ?</p>
-            <div className="flex gap-3 justify-end">
-              <button className="px-4 py-2 rounded-xl text-sm text-gray-600 hover:bg-gray-100" onClick={() => setShowSignoutModal(false)}>Annuler</button>
-              <button className="px-4 py-2 rounded-xl text-sm bg-red-500 text-white hover:bg-red-600" onClick={() => { setShowSignoutModal(false); signOut(); }}>Déconnexion</button>
-            </div>
+    {showSignoutModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+        <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4">
+          <h3 className="text-base font-bold text-gray-900 mb-2">Confirmer la déconnexion</h3>
+          <p className="text-sm text-gray-500 mb-6">Voulez-vous vraiment vous déconnecter ?</p>
+          <div className="flex gap-3 justify-end">
+            <button className="px-4 py-2 rounded-xl text-sm text-gray-600 hover:bg-gray-100" onClick={() => setShowSignoutModal(false)}>Annuler</button>
+            <button className="px-4 py-2 rounded-xl text-sm bg-red-500 text-white hover:bg-red-600" onClick={() => { setShowSignoutModal(false); signOut(); }}>Déconnexion</button>
           </div>
         </div>
-      )}
-    </header>
+      </div>
+    )}
+    </>
   );
 }
