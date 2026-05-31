@@ -471,6 +471,18 @@ export default function CandidateDashboard() {
           </div>
         </div>
       )}
+      {showSignoutModal && (
+        <div style={{position:'fixed',inset:0,zIndex:50,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'flex-end',justifyContent:'center',padding:'0 16px 32px'}}>
+          <div style={{background:'white',borderRadius:16,padding:24,width:'100%',maxWidth:400}}>
+            <p style={{fontWeight:'bold',fontSize:18,textAlign:'center',marginBottom:8}}>Déconnexion</p>
+            <p style={{color:'#666',fontSize:14,textAlign:'center',marginBottom:24}}>Voulez-vous vraiment vous déconnecter ?</p>
+            <div style={{display:'flex',gap:12}}>
+              <button onClick={() => setShowSignoutModal(false)} style={{flex:1,padding:'12px',borderRadius:12,border:'1px solid #ddd',fontWeight:600,background:'white',cursor:'pointer'}}>Annuler</button>
+              <button onClick={() => { setShowSignoutModal(false); signOut(); }} style={{flex:1,padding:'12px',borderRadius:12,background:'#ef4444',color:'white',fontWeight:600,border:'none',cursor:'pointer'}}>Se déconnecter</button>
+            </div>
+          </div>
+        </div>
+      )}
       </main>
     </div>
   );
