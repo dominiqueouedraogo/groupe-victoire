@@ -77,7 +77,7 @@ export default function CandidateDashboard() {
 
   useEffect(() => {
     if (!authLoading && !user) setLocation("/auth/login");
-    else if (!authLoading && role !== "candidate") setLocation("/");
+    else if (!authLoading && role !== null && role !== "candidate") setLocation("/");
   }, [user, role, authLoading]);
 
   const enrolledConcours: Array<{ type: string; cycle: string | null }> =
