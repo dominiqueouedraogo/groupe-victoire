@@ -96,6 +96,17 @@ export default function CandidateDashboard() {
     content_type: contentType !== "all" ? contentType : undefined,
   });
 
+  return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center space-y-3 p-8">
+          <p className="font-bold text-lg">DEBUG INFO</p>
+          <p>authLoading: {String(authLoading)}</p>
+          <p>user: {user?.email ?? "null"}</p>
+          <p>role: {role ?? "null"}</p>
+          <p>profile: {profile?.full_name ?? "null"}</p>
+        </div>
+      </div>
+    );
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
