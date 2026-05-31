@@ -94,6 +94,11 @@ export default function CandidateDashboard() {
   const { data: resources, isLoading: resourcesLoading } = useListResources({
     search: searchQuery || undefined,
     content_type: contentType !== "all" ? contentType : undefined,
+  }, {
+    query: {
+      retry: false,
+      throwOnError: false,
+    }
   });
 
   if (authLoading) {
