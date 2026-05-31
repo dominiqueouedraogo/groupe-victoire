@@ -461,7 +461,6 @@ export default function CandidateDashboard() {
       </main>
 
       <PremiumModal open={isPremiumModalOpen} onClose={() => setIsPremiumModalOpen(false)} />
-    </div>
       {showSignoutModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4">
@@ -474,6 +473,6 @@ export default function CandidateDashboard() {
           </div>
         </div>
       )}
-      </div>
+    </div>
   );
 }
