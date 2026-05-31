@@ -48,7 +48,7 @@ export default function App() {
       <AuthProvider>
         <ThemeProvider attribute="class" defaultTheme="light">
           <TooltipProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <WouterRouter base="">
               <Router />
               <WhatsAppButton />
             </WouterRouter>
