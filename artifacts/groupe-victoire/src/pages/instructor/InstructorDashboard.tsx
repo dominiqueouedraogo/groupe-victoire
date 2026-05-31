@@ -55,6 +55,7 @@ export default function InstructorDashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [uploadingFile, setUploadingFile] = useState(false);
+  const [showSignoutModal, setShowSignoutModal] = useState(false);
   const [uploadingThumb, setUploadingThumb] = useState(false);
 
   useEffect(() => {
@@ -185,7 +186,7 @@ export default function InstructorDashboard() {
         </Button>
       </nav>
       <div className="p-4 mt-auto">
-        <Button variant="ghost" className="w-full justify-start text-white/80 hover:text-red-400 hover:bg-white/10" onClick={() => { if (window.confirm("Voulez-vous vraiment vous déconnecter ?")) signOut(); }}>
+        <Button variant="ghost" className="w-full justify-start text-white/80 hover:text-red-400 hover:bg-white/10" onClick={() => setShowSignoutModal(true)}}>
           <LogOut className="mr-3 h-5 w-5" />
           Déconnexion
         </Button>
@@ -402,6 +403,19 @@ export default function InstructorDashboard() {
           </section>
 
         </div>
+      
+      {showSignoutModal && (
+        <div style={{position:'fixed',inset:0,zIndex:999,background:'rgba(0,0,0,0.6)',display:'flex',alignItems:'flex-end',justifyContent:'center',padding:'0 16px 40px'}}>
+          <div style={{background:'white',borderRadius:16,padding:24,width:'100%',maxWidth:360}}>
+            <p style={{fontWeight:'bold',fontSize:17,textAlign:'center',marginBottom:6}}>Déconnexion</p>
+            <p style={{color:'#666',fontSize:14,textAlign:'center',marginBottom:20}}>Voulez-vous vraiment vous déconnecter ?</p>
+            <div style={{display:'flex',gap:10}}>
+              <button onClick={() => setShowSignoutModal(false)} style={{flex:1,padding:'11px',borderRadius:10,border:'1px solid #ddd',fontWeight:600,background:'white',cursor:'pointer',fontSize:14}}>Annuler</button>
+              <button onClick={() => { setShowSignoutModal(false); signOut(); }} style={{flex:1,padding:'11px',borderRadius:10,background:'#ef4444',color:'white',fontWeight:600,border:'none',cursor:'pointer',fontSize:14}}>Se déconnecter</button>
+            </div>
+          </div>
+        </div>
+      )}
       </main>
     </div>
   );
