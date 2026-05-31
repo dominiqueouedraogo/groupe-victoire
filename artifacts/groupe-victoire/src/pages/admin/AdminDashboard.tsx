@@ -101,7 +101,7 @@ export default function AdminDashboard() {
           <LayoutDashboard className="mr-2 h-5 w-5 text-[#D4AF37]" />
           Administration Victoire
         </div>
-        <Button variant="ghost" className="text-white hover:text-red-300 hover:bg-white/10" onClick={signOut}>
+        <Button variant="ghost" className="text-white hover:text-red-300 hover:bg-white/10" onClick={() => { if (window.confirm("Voulez-vous vraiment vous déconnecter ?")) signOut(); }}>
           <LogOut className="mr-2 h-4 w-4" /> Déconnexion
         </Button>
       </header>

@@ -185,7 +185,7 @@ export default function InstructorDashboard() {
         </Button>
       </nav>
       <div className="p-4 mt-auto">
-        <Button variant="ghost" className="w-full justify-start text-white/80 hover:text-red-400 hover:bg-white/10" onClick={signOut}>
+        <Button variant="ghost" className="w-full justify-start text-white/80 hover:text-red-400 hover:bg-white/10" onClick={() => { if (window.confirm("Voulez-vous vraiment vous déconnecter ?")) signOut(); }}>
           <LogOut className="mr-3 h-5 w-5" />
           Déconnexion
         </Button>
