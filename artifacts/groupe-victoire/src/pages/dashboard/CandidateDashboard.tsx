@@ -458,9 +458,7 @@ export default function CandidateDashboard() {
             </div>
           </div>
         </div>
-      </main>
-
-
+      
       {showSignoutModal && (
         <div style={{position:'fixed',inset:0,zIndex:50,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'flex-end',justifyContent:'center',padding:'0 16px 32px'}}>
           <div style={{background:'white',borderRadius:16,padding:24,width:'100%',maxWidth:400}}>
@@ -473,6 +471,7 @@ export default function CandidateDashboard() {
           </div>
         </div>
       )}
+      </main>
     </div>
   );
 }
