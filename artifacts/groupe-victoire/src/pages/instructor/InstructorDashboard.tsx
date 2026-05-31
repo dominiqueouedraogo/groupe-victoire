@@ -4,13 +4,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-  useListSubjects,
-  useCreateResource,
-  useListResources,
-  useDeleteResource,
-  useCreateNews,
-} from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
