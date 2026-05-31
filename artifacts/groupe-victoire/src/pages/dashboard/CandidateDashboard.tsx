@@ -66,6 +66,7 @@ export default function CandidateDashboard() {
   const [contentType, setContentType] = useState(getInitialTab);
   const [searchQuery, setSearchQuery] = useState("");
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
+  const [showSignoutModal, setShowSignoutModal] = useState(false);
   const [selectedConcours, setSelectedConcours] = useState<string | null>(null);
 
   // Sync tab when URL changes
@@ -195,7 +196,7 @@ export default function CandidateDashboard() {
 
       <div className="p-3 border-t border-gray-100">
         <button
-          onClick={() => { if (window.confirm("Voulez-vous vraiment vous déconnecter ?")) signOut(); }}
+          onClick={() => setShowSignoutModal(true)}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all"
         >
           <LogOut className="h-4 w-4 shrink-0" />
@@ -460,6 +461,29 @@ export default function CandidateDashboard() {
       </main>
 
       <PremiumModal open={isPremiumModalOpen} onClose={() => setIsPremiumModalOpen(false)} />
+
+      {showSignoutModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Déconnexion</h3>
+            <p className="text-gray-500 text-sm mb-6">Voulez-vous vraiment vous déconnecter ?</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowSignoutModal(false)}
+                className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-medium text-sm hover:bg-gray-50"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => { setShowSignoutModal(false); signOut(); }}
+                className="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-medium text-sm hover:bg-red-600"
+              >
+                Se déconnecter
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
