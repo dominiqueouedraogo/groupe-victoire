@@ -421,6 +421,48 @@ export default function InstructorDashboard() {
             </Form>
           </section>
 
+          {/* Candidates Section */}
+          <section id="candidates" className="bg-background rounded-xl border shadow-sm p-6 overflow-hidden">
+            <h2 className="text-2xl font-serif font-bold text-primary mb-6 flex items-center">
+              <Users className="mr-2 h-6 w-6" /> Mes Candidats
+            </h2>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nom</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Ville</TableHead>
+                    <TableHead>Statut</TableHead>
+                    <TableHead>Inscription</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {candidatesLoading ? (
+                    Array.from({ length: 3 }).map((_, i) => (
+                      <TableRow key={i}><TableCell colSpan={5}><Skeleton className="h-8 w-full" /></TableCell></TableRow>
+                    ))
+                  ) : candidates.length === 0 ? (
+                    <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">Aucun candidat inscrit.</TableCell></TableRow>
+                  ) : candidates.map((cand) => (
+                    <TableRow key={cand.id}>
+                      <TableCell className="font-medium">{cand.full_name || "-"}</TableCell>
+                      <TableCell>{cand.email}</TableCell>
+                      <TableCell>{cand.city || "-"}</TableCell>
+                      <TableCell>
+                        <Badge variant={cand.is_premium ? "default" : "secondary"} className={cand.is_premium ? "bg-[#D4AF37]" : ""}>
+                          {cand.is_premium ? "Premium" : "Gratuit"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{new Date(cand.created_at).toLocaleDateString()}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </section>
+
+
         </div>
       
       {showSignoutModal && (
