@@ -276,7 +276,7 @@ export default function InstructorDashboard() {
                       <FormLabel>Type de contenu</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez un type" /></SelectTrigger></FormControl>
-                        <SelectContent>
+                        <SelectContent position="popper" className="z-50">
                           <SelectItem value="lesson">Cours</SelectItem>
                           <SelectItem value="annal">Annale</SelectItem>
                           <SelectItem value="tip">Conseil</SelectItem>
@@ -291,7 +291,7 @@ export default function InstructorDashboard() {
                       <FormLabel>Matière</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl><SelectTrigger><SelectValue placeholder="Sélectionnez une matière" /></SelectTrigger></FormControl>
-                        <SelectContent>
+                        <SelectContent position="popper" className="z-50">
                           {subjects?.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
                         </SelectContent>
                       </Select>

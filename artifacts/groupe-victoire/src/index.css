@@ -228,3 +228,22 @@ html { scroll-behavior: smooth; }
   }
   .text-orange { color: #FF6B00; }
 }
+
+@keyframes greenSweep {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(250%) skewX(-15deg); }
+}
+
+.green-sweep::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(134, 239, 172, 0.15) 50%,
+    transparent 70%
+  );
+  animation: greenSweep 6s ease-in-out infinite;
+  pointer-events: none;
+}
