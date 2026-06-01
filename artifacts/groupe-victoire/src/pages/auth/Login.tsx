@@ -174,12 +174,7 @@ export default function Login() {
                   Créer un compte
                 </Link>
               </p>
-              <p className="text-gray-500">
-                Vous êtes enseignant ?{" "}
-                <Link href="/auth/signup/instructor" className="text-primary font-semibold hover:underline">
-                  Devenir instructeur
-                </Link>
-              </p>
+              
             </div>
           </div>
         </div>
