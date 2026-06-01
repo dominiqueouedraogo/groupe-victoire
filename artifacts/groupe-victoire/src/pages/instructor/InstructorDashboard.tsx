@@ -93,9 +93,43 @@ export default function InstructorDashboard() {
   }, []);
   const myResources: any[] = []; const resourcesLoading = false;
   
-  const createResource: any = { mutateAsync: async () => {} };
-  const deleteResource: any = { mutateAsync: async () => {} };
-  const createNews: any = { mutateAsync: async () => {} };
+  const [createResourcePending, setCreateResourcePending] = useState(false);
+  const [createNewsPending, setCreateNewsPending] = useState(false);
+
+  const createResource = {
+    isPending: createResourcePending,
+    mutate: async ({ data }: any, callbacks: any) => {
+      setCreateResourcePending(true);
+      try {
+        const { error } = await supabase.from("resources").insert({ ...data, author_id: user?.id });
+        if (error) throw error;
+        callbacks?.onSuccess?.();
+      } catch (err: any) {
+        callbacks?.onError?.(err);
+      } finally { setCreateResourcePending(false); }
+    }
+  };
+
+  const deleteResource = {
+    mutate: async ({ id }: any, callbacks: any) => {
+      const { error } = await supabase.from("resources").delete().eq("id", id);
+      if (!error) callbacks?.onSuccess?.();
+    }
+  };
+
+  const createNews = {
+    isPending: createNewsPending,
+    mutate: async ({ data }: any, callbacks: any) => {
+      setCreateNewsPending(true);
+      try {
+        const { error } = await supabase.from("news").insert({ ...data, author_id: user?.id });
+        if (error) throw error;
+        callbacks?.onSuccess?.();
+      } catch (err: any) {
+        callbacks?.onError?.(err);
+      } finally { setCreateNewsPending(false); }
+    }
+  };
 
   const resourceForm = useForm<z.infer<typeof resourceSchema>>({
     resolver: zodResolver(resourceSchema),
