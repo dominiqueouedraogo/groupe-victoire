@@ -338,7 +338,7 @@ export default function CandidateSignup() {
                             <SelectValue placeholder="Choisissez votre ville / modalité" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="rounded-xl">
+                        <SelectContent className="rounded-xl bg-gray-900 border-gray-700 text-white">
                           {LOCATIONS.map((loc) => (
                             <SelectItem className="text-white focus:bg-gray-700 focus:text-white" key={loc.id} value={loc.id} className="rounded-lg">{loc.name}</SelectItem>
                           ))}
