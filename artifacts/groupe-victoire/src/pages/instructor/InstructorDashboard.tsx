@@ -31,7 +31,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
-import { Home, Upload, FileText, Newspaper, LogOut, Menu, Trash2, Loader2 } from "lucide-react";
+import { Home, Upload, FileText, Newspaper, LogOut, Menu, Trash2, Loader2, Users } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const resourceSchema = z.object({
@@ -57,6 +57,22 @@ export default function InstructorDashboard() {
   const [uploadingFile, setUploadingFile] = useState(false);
   const [showSignoutModal, setShowSignoutModal] = useState(false);
   const [uploadingThumb, setUploadingThumb] = useState(false);
+  const [candidates, setCandidates] = useState<any[]>([]);
+  const [candidatesLoading, setCandidatesLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      setCandidatesLoading(true);
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("role", "candidate")
+        .order("created_at", { ascending: false });
+      if (!error && data) setCandidates(data);
+      setCandidatesLoading(false);
+    };
+    fetchCandidates();
+  }, []);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -183,6 +199,9 @@ export default function InstructorDashboard() {
         </Button>
         <Button variant="ghost" className="w-full justify-start text-white/80 hover:text-white hover:bg-white/10" asChild>
           <a href="#news"><Newspaper className="mr-3 h-5 w-5" /> Actualités</a>
+        </Button>
+        <Button variant="ghost" className="w-full justify-start text-white/80 hover:text-white hover:bg-white/10" asChild>
+          <a href="#candidates"><Users className="mr-3 h-5 w-5" /> Mes Candidats</a>
         </Button>
       </nav>
       <div className="p-4 mt-auto">
