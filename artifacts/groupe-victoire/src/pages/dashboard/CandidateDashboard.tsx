@@ -231,6 +231,23 @@ export default function CandidateDashboard() {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          {/* Actualités */}
+          {news.length > 0 && (
+          <section className="px-4 pt-4">
+            <h2 className="text-base font-bold text-gray-900 mb-2 flex items-center gap-2">
+              📢 Actualités
+            </h2>
+            <div className="space-y-2 mb-4">
+              {news.map((item: any) => (
+                <div key={item.id} className="bg-orange-50 border border-orange-200 rounded-2xl p-4">
+                  <h3 className="font-semibold text-gray-900 text-sm">{item.title}</h3>
+                  <p className="text-xs text-gray-500 mt-1">{item.content}</p>
+                  <p className="text-xs text-gray-400 mt-2">{new Date(item.created_at).toLocaleDateString('fr-FR')}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+          )}
         <header className="h-16 border-b border-gray-100 bg-white flex items-center justify-between px-4 lg:px-6 shrink-0 shadow-sm">
           <div className="flex items-center gap-3">
             <Sheet>
@@ -476,25 +493,7 @@ export default function CandidateDashboard() {
             </div>
           </div>
         </div>
-          {/* Actualités */}
-          <section className="px-4 pb-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-              📢 Actualités
-            </h2>
-            {news.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-6">Aucune actualité pour le moment.</p>
-            ) : (
-              <div className="space-y-3">
-                {news.map((item: any) => (
-                  <div key={item.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-                    <h3 className="font-semibold text-gray-900 text-sm">{item.title}</h3>
-                    <p className="text-xs text-gray-500 mt-1">{item.content}</p>
-                    <p className="text-xs text-gray-400 mt-2">{new Date(item.created_at).toLocaleDateString('fr-FR')}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
+
       </main>
 
       <PremiumModal open={isPremiumModalOpen} onClose={() => setIsPremiumModalOpen(false)} />
