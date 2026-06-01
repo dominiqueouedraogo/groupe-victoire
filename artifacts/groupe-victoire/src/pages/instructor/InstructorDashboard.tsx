@@ -82,7 +82,15 @@ export default function InstructorDashboard() {
     }
   }, [user, role, authLoading, setLocation]);
 
-  const subjects: any[] = [];
+  const [subjects, setSubjects] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      const { data } = await supabase.from("subjects").select("*").order("name");
+      if (data) setSubjects(data);
+    };
+    fetchSubjects();
+  }, []);
   const myResources: any[] = []; const resourcesLoading = false;
   
   const createResource: any = { mutateAsync: async () => {} };
