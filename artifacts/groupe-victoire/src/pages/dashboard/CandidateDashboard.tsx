@@ -1,3 +1,4 @@
+import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
