@@ -91,7 +91,17 @@ export default function InstructorDashboard() {
     };
     fetchSubjects();
   }, []);
-  const myResources: any[] = []; const resourcesLoading = false;
+  const [myResources, setMyResources] = useState<any[]>([]);
+  const resourcesLoading = false;
+
+  useEffect(() => {
+    const fetchResources = async () => {
+      if (!user?.id) return;
+      const { data } = await supabase.from("resources").select("*").eq("author_id", user.id).order("created_at", { ascending: false });
+      if (data) setMyResources(data);
+    };
+    fetchResources();
+  }, [user?.id]);
   
   const [createResourcePending, setCreateResourcePending] = useState(false);
   const [createNewsPending, setCreateNewsPending] = useState(false);
