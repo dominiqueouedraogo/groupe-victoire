@@ -121,22 +121,7 @@ export default function InstructorDashboard() {
     setNewsList(prev => prev.filter(n => n.id !== id));
     toast({ title: "Actualité supprimée" });
   };
-  const [newsList, setNewsList] = useState<any[]>([]);
 
-  useEffect(() => {
-    const fetchNews = async () => {
-      const { data } = await supabase.from("news").select("*").order("created_at", { ascending: false });
-      if (data) setNewsList(data);
-    };
-    fetchNews();
-  }, []);
-
-  const handleDeleteNews = async (id: string) => {
-    if (!confirm("Supprimer cette actualité ?")) return;
-    await supabase.from("news").delete().eq("id", id);
-    setNewsList(prev => prev.filter(n => n.id !== id));
-    toast({ title: "Actualité supprimée" });
-  };
 
   const createResource = {
     isPending: createResourcePending,
