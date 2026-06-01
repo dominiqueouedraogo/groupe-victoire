@@ -231,22 +231,18 @@ export default function CandidateDashboard() {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-          {/* Actualités */}
+          {/* Actualités ticker */}
           {news.length > 0 && (
-          <section className="px-4 pt-4">
-            <h2 className="text-base font-bold text-gray-900 mb-2 flex items-center gap-2">
-              📢 Actualités
-            </h2>
-            <div className="space-y-2 mb-4">
-              {news.map((item: any) => (
-                <div key={item.id} className="bg-orange-50 border border-orange-200 rounded-2xl p-4">
-                  <h3 className="font-semibold text-gray-900 text-sm">{item.title}</h3>
-                  <p className="text-xs text-gray-500 mt-1">{item.content}</p>
-                  <p className="text-xs text-gray-400 mt-2">{new Date(item.created_at).toLocaleDateString('fr-FR')}</p>
-                </div>
-              ))}
+          <div className="bg-orange-500 text-white flex items-center overflow-hidden h-9 shrink-0">
+            <span className="bg-orange-700 px-3 h-full flex items-center text-xs font-bold shrink-0">📢 ACTU</span>
+            <div className="overflow-hidden flex-1">
+              <div className="flex gap-12 animate-marquee whitespace-nowrap">
+                {[...news, ...news].map((item: any, i: number) => (
+                  <span key={i} className="text-xs font-medium">{item.title} — {item.content}</span>
+                ))}
+              </div>
             </div>
-          </section>
+          </div>
           )}
         <header className="h-16 border-b border-gray-100 bg-white flex items-center justify-between px-4 lg:px-6 shrink-0 shadow-sm">
           <div className="flex items-center gap-3">
