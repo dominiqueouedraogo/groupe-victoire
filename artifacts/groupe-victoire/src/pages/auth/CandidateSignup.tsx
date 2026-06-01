@@ -340,7 +340,7 @@ export default function CandidateSignup() {
                         </FormControl>
                         <SelectContent className="rounded-xl">
                           {LOCATIONS.map((loc) => (
-                            <SelectItem key={loc.id} value={loc.id} className="rounded-lg">{loc.name}</SelectItem>
+                            <SelectItem className="text-white focus:bg-gray-700 focus:text-white" key={loc.id} value={loc.id} className="rounded-lg">{loc.name}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
