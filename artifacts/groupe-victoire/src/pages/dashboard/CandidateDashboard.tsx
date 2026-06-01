@@ -91,8 +91,16 @@ export default function CandidateDashboard() {
     if (concoursIds.length > 0 && !selectedConcours) setSelectedConcours(concoursIds[0]);
   }, [concoursIds.length]);
 
-  const resources: any[] = [];
+  const [resources, setResources] = useState<any[]>([]);
   const resourcesLoading = false;
+
+  useEffect(() => {
+    const fetchResources = async () => {
+      const { data } = await supabase.from("resources").select("*").order("created_at", { ascending: false });
+      if (data) setResources(data);
+    };
+    fetchResources();
+  }, []);
 
   if (authLoading) {
     return (
