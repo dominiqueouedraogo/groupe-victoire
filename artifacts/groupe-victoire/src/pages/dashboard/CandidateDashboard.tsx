@@ -476,3 +476,59 @@ export default function CandidateDashboard() {
     </div>
   );
 }
+function ResourceGrid({ resources, loading, isPremium, onResourceClick }: {
+  resources: any[];
+  loading: boolean;
+  isPremium: boolean;
+  onResourceClick: (r: any) => void;
+}) {
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="h-32 bg-gray-100 rounded-xl animate-pulse" />
+        ))}
+      </div>
+    );
+  }
+  if (!resources || resources.length === 0) {
+    return (
+      <div className="text-center py-16">
+        <div className="text-4xl mb-3">📚</div>
+        <p className="text-gray-500 text-sm">Aucune ressource disponible pour le moment.</p>
+        <p className="text-gray-400 text-xs mt-1">Revenez bientôt !</p>
+      </div>
+    );
+  }
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {resources.map((resource) => (
+        <div
+          key={resource.id}
+          onClick={() => onResourceClick(resource)}
+          className="border border-gray-100 rounded-xl p-4 bg-white hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group"
+        >
+          <div className="flex items-start gap-3">
+            <div className="h-10 w-10 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
+              {!resource.is_free && !isPremium
+                ? <span className="text-base">🔒</span>
+                : <span className="text-base">📄</span>}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-sm text-gray-900 truncate">{resource.title}</p>
+              {resource.description && (
+                <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{resource.description}</p>
+              )}
+              <div className="flex gap-2 mt-2">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{resource.content_type}</span>
+                {resource.is_free
+                  ? <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700">Gratuit</span>
+                  : <span className="text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">Premium</span>}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
