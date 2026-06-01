@@ -94,6 +94,15 @@ export default function CandidateDashboard() {
 
   const [resources, setResources] = useState<any[]>([]);
   const resourcesLoading = false;
+  const [news, setNews] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      const { data } = await supabase.from("news").select("*").order("created_at", { ascending: false });
+      if (data) setNews(data);
+    };
+    fetchNews();
+  }, []);
 
   useEffect(() => {
     const fetchResources = async () => {
