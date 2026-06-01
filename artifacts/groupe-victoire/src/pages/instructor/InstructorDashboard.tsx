@@ -490,6 +490,30 @@ export default function InstructorDashboard() {
             </Form>
           </section>
 
+            {/* News List Section */}
+            <section className="bg-background rounded-xl border shadow-sm p-6 mb-6">
+              <h2 className="text-2xl font-serif font-bold text-primary mb-6 flex items-center">
+                <Newspaper className="mr-2 h-6 w-6" /> Actualités publiées
+              </h2>
+              {newsList.length === 0 ? (
+                <p className="text-center text-muted-foreground py-8">Aucune actualité publiée.</p>
+              ) : (
+                <div className="space-y-3">
+                  {newsList.map((item: any) => (
+                    <div key={item.id} className="flex items-start justify-between bg-muted/30 rounded-xl p-4 border">
+                      <div>
+                        <p className="font-semibold text-gray-900">{item.title}</p>
+                        <p className="text-sm text-gray-500 mt-1">{item.content}</p>
+                        <p className="text-xs text-gray-400 mt-2">{new Date(item.created_at).toLocaleDateString('fr-FR')}</p>
+                      </div>
+                      <button onClick={() => handleDeleteNews(item.id)} className="ml-4 text-red-400 hover:text-red-600">
+                        <Trash2 className="h-5 w-5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
           {/* Candidates Section */}
           <section id="candidates" className="bg-background rounded-xl border shadow-sm p-6 overflow-hidden">
             <h2 className="text-2xl font-serif font-bold text-primary mb-6 flex items-center">
