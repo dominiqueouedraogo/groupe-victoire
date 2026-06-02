@@ -95,6 +95,31 @@ export default function CandidateDashboard() {
   const [resources, setResources] = useState<any[]>([]);
   const resourcesLoading = false;
   const [news, setNews] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [showNotifs, setShowNotifs] = useState(false);
+  const [lastSeen, setLastSeen] = useState<string>(() => localStorage.getItem("notif_last_seen") || "");
+
+  useEffect(() => {
+    const fetchNotifs = async () => {
+      const { data: resData } = await supabase.from("resources").select("id,title,content_type,created_at").order("created_at", { ascending: false }).limit(20);
+      const { data: newsData } = await supabase.from("news").select("id,title,created_at").order("created_at", { ascending: false }).limit(10);
+      const all = [
+        ...(resData || []).map((r: any) => ({ id: r.id, label: r.content_type === "lesson" ? "Nouveau cours" : r.content_type === "annal" ? "Nouvelle annale" : "Nouveau conseil", title: r.title, created_at: r.created_at })),
+        ...(newsData || []).map((n: any) => ({ id: "news_"+n.id, label: "Actualité", title: n.title, created_at: n.created_at })),
+      ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      setNotifications(all);
+    };
+    fetchNotifs();
+  }, []);
+
+  const unreadCount = notifications.filter(n => !lastSeen || n.created_at > lastSeen).length;
+
+  const handleOpenNotifs = () => {
+    setShowNotifs(!showNotifs);
+    const now = new Date().toISOString();
+    setLastSeen(now);
+    localStorage.setItem("notif_last_seen", now);
+  };
 
   useEffect(() => {
     const fetchNews = async () => {
