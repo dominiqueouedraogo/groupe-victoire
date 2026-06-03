@@ -143,11 +143,12 @@ export default function ResourceDetail() {
                     </div>
                   </div>
                 ) : (
-                  <div className="prose prose-blue dark:prose-invert max-w-none">
-                    <p className="text-muted-foreground italic text-center py-12">
-                      Le contenu textuel de cette ressource sera affiché ici.
-                    </p>
-                  </div>
+                  <iframe
+                    src={resource.file_url}
+                    className="w-full rounded-lg border"
+                    style={{ height: '75vh' }}
+                    title={resource.title}
+                  />
                 )}
               </div>
             )}
