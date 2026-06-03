@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import PremiumModal from "@/components/PremiumModal";
 import { ArrowLeft, BookOpen, FileText, Lightbulb, Lock, Download, ExternalLink } from "lucide-react";
-import { useGetResource, getGetResourceQueryKey } from "@workspace/api-client-react";
+import { supabase } from "@/lib/supabase";
 
 export default function ResourceDetail() {
   const { id } = useParams<{ id: string }>();
