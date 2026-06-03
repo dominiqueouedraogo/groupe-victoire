@@ -23,7 +23,7 @@ export default function ResourceDetail() {
 
   useEffect(() => {
     if (!authLoading && !resourceLoading && resource) {
-      if (!resource.is_free && !isPremium) {
+      if (resource.is_free === false && !isPremium) {
         setIsPremiumModalOpen(true);
       }
     }
