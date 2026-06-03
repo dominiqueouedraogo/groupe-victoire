@@ -68,7 +68,7 @@ export default function InstructorDashboard() {
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("role", "candidate")
+        .neq("role", "instructor")
         .order("created_at", { ascending: false });
       if (!error && data) setCandidates(data);
       setCandidatesLoading(false);
@@ -595,18 +595,13 @@ export default function InstructorDashboard() {
                       <TableCell>{cand.phone || cand.telephone || "-"}</TableCell>
                       <TableCell>{cand.city || "-"}</TableCell>
                       <TableCell>
-                        <div className="text-xs space-y-1">
-                          {Array.isArray(cand.selected_concours) && cand.selected_concours.length > 0
-                            ? cand.selected_concours.map((c: string, i: number) => (
-                                <div key={i} className="bg-muted px-2 py-0.5 rounded">{c}</div>
-                              ))
-                            : <span className="text-muted-foreground">-</span>
-                          }
+                        <div className="text-xs text-muted-foreground">
+                          {cand.specialization || "-"}
                         </div>
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline" className="text-xs">
-                          {cand.payment_mode === "monthly" ? "Mensuel" : cand.payment_mode === "annual" ? "Annuel" : cand.payment_mode || "-"}
+                          {cand.premium_type === "monthly" ? "Mensuel" : cand.premium_type === "annual" ? "Annuel" : "Non défini"}
                         </Badge>
                       </TableCell>
                       <TableCell>
