@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
