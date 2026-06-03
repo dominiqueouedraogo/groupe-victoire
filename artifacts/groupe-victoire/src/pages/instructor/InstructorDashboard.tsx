@@ -67,7 +67,11 @@ export default function InstructorDashboard() {
       setCandidatesLoading(true);
       const { data, error } = await supabase
         .from("profiles")
-        .select("*")
+        .select(`
+          *,
+          payments(amount, method, status, created_at),
+          user_cycles(cycle_id, created_at)
+        `)
         .eq("role", "candidate")
         .order("created_at", { ascending: false });
       if (!error && data) setCandidates(data);
