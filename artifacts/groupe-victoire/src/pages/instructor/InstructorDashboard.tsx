@@ -68,7 +68,7 @@ export default function InstructorDashboard() {
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .neq("role", "instructor")
+        .eq("role", "candidate")
         .order("created_at", { ascending: false });
       if (!error && data) setCandidates(data);
       setCandidatesLoading(false);
