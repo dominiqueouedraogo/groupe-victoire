@@ -93,6 +93,8 @@ export default function CandidateDashboard() {
   }, [concoursIds.length]);
 
   const [resources, setResources] = useState<any[]>([]);
+  const [userProgress, setUserProgress] = useState<Record<string, number>>({});
+  const [subjects, setSubjects] = useState<any[]>([]);
   const resourcesLoading = false;
   const [news, setNews] = useState<any[]>([]);
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -136,6 +138,30 @@ export default function CandidateDashboard() {
     };
     fetchResources();
   }, []);
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      const { data } = await supabase.from("subjects").select("*").order("name");
+      if (data) setSubjects(data);
+    };
+    fetchSubjects();
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchProgress = async () => {
+      const { data } = await supabase
+        .from("user_progress")
+        .select("subject_id, progress_pct")
+        .eq("user_id", user.id);
+      if (data) {
+        const map: Record<string, number> = {};
+        data.forEach((row: any) => { map[row.subject_id] = row.progress_pct; });
+        setUserProgress(map);
+      }
+    };
+    fetchProgress();
+  }, [user]);
 
   if (authLoading) {
     return (
@@ -342,7 +368,7 @@ export default function CandidateDashboard() {
                     { icon: GraduationCap, label: "Concours", val: concoursIds.length || 0, color: "text-primary bg-orange-50" },
                     { icon: BookOpen, label: "Cours disponibles", val: resources?.filter(r => r.content_type === "lesson").length || 0, color: "text-blue-600 bg-blue-50" },
                     { icon: FileText, label: "Annales", val: resources?.filter(r => r.content_type === "annal").length || 0, color: "text-green-600 bg-green-50" },
-                    { icon: Award, label: "Progression", val: "12%", color: "text-purple-600 bg-purple-50" },
+                    { icon: Award, label: "Progression", val: (() => { const vals = Object.values(userProgress); return vals.length ? Math.round(vals.reduce((a,b)=>a+b,0)/vals.length)+"%" : "0%"; })(), color: "text-purple-600 bg-purple-50" },
                   ].map((stat) => {
                     const Icon = stat.icon;
                     return (
@@ -402,7 +428,8 @@ export default function CandidateDashboard() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                       {currentSubjects.map((subject) => {
-                        const progress = Math.floor(Math.random() * 45 + 5);
+                        const subjectObj = subjects.find(s => s.name === subject);
+                        const progress = subjectObj ? (userProgress[subjectObj.id] ?? 0) : 0;
                         return (
                           <Card
                             key={subject}
