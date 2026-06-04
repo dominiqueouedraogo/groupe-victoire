@@ -334,10 +334,45 @@ export default function CandidateDashboard() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button variant="ghost" size="icon" className="relative hover:bg-gray-100 rounded-xl shrink-0">
-              <Bell className="h-5 w-5 text-gray-500" />
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary" />
-            </Button>
+            <div className="relative">
+              <Button variant="ghost" size="icon" onClick={handleOpenNotifs} className="relative hover:bg-gray-100 rounded-xl shrink-0">
+                <Bell className="h-5 w-5 text-gray-500" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 right-1 h-4 w-4 rounded-full bg-primary text-white text-[10px] flex items-center justify-center font-bold">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </Button>
+              {showNotifs && (
+                <div className="absolute right-0 top-12 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                    <span className="font-bold text-sm text-gray-900">Notifications</span>
+                    <span className="text-xs text-gray-400">{notifications.length} au total</span>
+                  </div>
+                  <div className="max-h-80 overflow-y-auto divide-y divide-gray-50">
+                    {notifications.length === 0 ? (
+                      <p className="text-sm text-gray-400 text-center py-8">Aucune notification</p>
+                    ) : notifications.map((n, i) => (
+                      <div key={n.id} className={`flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors ${!lastSeen || n.created_at > lastSeen ? "bg-orange-50" : ""}`}>
+                        <div className={`h-8 w-8 rounded-xl flex items-center justify-center shrink-0 text-sm ${
+                          n.label === "Nouveau cours" ? "bg-blue-50 text-blue-600" :
+                          n.label === "Nouvelle annale" ? "bg-green-50 text-green-600" :
+                          n.label === "Nouveau conseil" ? "bg-yellow-50 text-yellow-600" :
+                          "bg-orange-50 text-primary"
+                        }`}>
+                          {n.label === "Nouveau cours" ? "📖" : n.label === "Nouvelle annale" ? "📄" : n.label === "Nouveau conseil" ? "💡" : "📢"}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold text-primary">{n.label}</p>
+                          <p className="text-sm text-gray-800 truncate">{n.title}</p>
+                          <p className="text-xs text-gray-400 mt-0.5">{new Date(n.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
