@@ -62,7 +62,7 @@ export default function Navbar() {
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 rounded-xl shadow-lg border-gray-100" align="end" forceMount>
+                <DropdownMenuContent className="w-56 rounded-xl shadow-lg border-gray-800 bg-gray-900 text-white" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal p-3">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-semibold leading-none text-gray-900">{fullName || "Candidat"}</p>
@@ -73,14 +73,14 @@ export default function Navbar() {
                       {profile?.is_premium && <Badge className="bg-primary text-white text-xs">Premium</Badge>}
                     </div>
                   </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-gray-100" />
-                  <DropdownMenuItem asChild className="rounded-lg mx-1 cursor-pointer">
+                  <DropdownMenuSeparator className="bg-gray-700" />
+                  <DropdownMenuItem asChild className="rounded-lg mx-1 cursor-pointer text-white hover:bg-gray-700 focus:bg-gray-700">
                     <Link href={getDashboardLink()} className="flex items-center">
                       <LayoutDashboard className="mr-2 h-4 w-4 text-primary" />
                       <span>Tableau de bord</span>
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-gray-100" />
+                  <DropdownMenuSeparator className="bg-gray-700" />
                   <DropdownMenuItem onClick={() => setShowSignoutModal(true)} className="rounded-lg mx-1 mb-1 text-red-500 focus:text-red-600 focus:bg-red-50 cursor-pointer">
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Deconnexion</span>
