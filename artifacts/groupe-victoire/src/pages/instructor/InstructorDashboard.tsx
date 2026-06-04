@@ -74,7 +74,8 @@ export default function InstructorDashboard() {
         `)
         .eq("role", "candidate")
         .order("created_at", { ascending: false });
-      if (!error && data) setCandidates(data);
+      if (error) console.error('fetchCandidates:', error);
+        if (data) setCandidates(data);
       setCandidatesLoading(false);
     };
     fetchCandidates();
